@@ -37,6 +37,7 @@ Partial Class PropertiesForm
 		Me.locked = New System.Windows.Forms.CheckBox
 		Me.solid = New System.Windows.Forms.CheckBox
 		Me.Button1 = New System.Windows.Forms.Button
+		Me.reloadButton = New System.Windows.Forms.Button
 		Me.SuspendLayout()
 		'
 		'Label1
@@ -157,18 +158,28 @@ Partial Class PropertiesForm
 		'
 		'Button1
 		'
-		Me.Button1.Location = New System.Drawing.Point(97, 214)
+		Me.Button1.Location = New System.Drawing.Point(97, 219)
 		Me.Button1.Name = "Button1"
 		Me.Button1.Size = New System.Drawing.Size(75, 23)
 		Me.Button1.TabIndex = 3
 		Me.Button1.Text = "Apply"
 		Me.Button1.UseVisualStyleBackColor = True
 		'
+		'reloadButton
+		'
+		Me.reloadButton.Location = New System.Drawing.Point(16, 219)
+		Me.reloadButton.Name = "reloadButton"
+		Me.reloadButton.Size = New System.Drawing.Size(75, 23)
+		Me.reloadButton.TabIndex = 4
+		Me.reloadButton.Text = "Reload"
+		Me.reloadButton.UseVisualStyleBackColor = True
+		'
 		'PropertiesForm
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.ClientSize = New System.Drawing.Size(184, 254)
+		Me.Controls.Add(Me.reloadButton)
 		Me.Controls.Add(Me.Button1)
 		Me.Controls.Add(Me.solid)
 		Me.Controls.Add(Me.locked)
@@ -205,4 +216,5 @@ Partial Class PropertiesForm
 	Friend WithEvents locked As System.Windows.Forms.CheckBox
 	Friend WithEvents solid As System.Windows.Forms.CheckBox
 	Friend WithEvents Button1 As System.Windows.Forms.Button
+	Friend WithEvents reloadButton As System.Windows.Forms.Button
 End Class

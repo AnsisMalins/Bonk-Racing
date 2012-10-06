@@ -65,7 +65,7 @@ Public Class World
 						If Not i.IsSolid Then Continue For
 						Dim iRect As New RectangleF(i.Location + i.Velocity * Speed - i.Size / 2, i.Size)
 						For Each j As Entity In Entities
-							If i Is j Then Continue For
+							If i Is j OrElse i.IsLocked AndAlso j.IsLocked Then Continue For
 							Dim jRect As RectangleF = j.Rectangle
 							If RectangleF.Intersect(iRect, jRect) <> RectangleF.Empty Then
 								i.IsColliding = True

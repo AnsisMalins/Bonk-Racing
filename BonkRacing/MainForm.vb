@@ -20,7 +20,7 @@ Public Class MainForm
 
 	Private currentTool As BaseTool
 	Private createTool As New CreateTool()
-	Private selectTool As New SelectTool()
+	Public selectTool As New SelectTool()
 	Private resources As List(Of IDisposable)
 	Public camera As Camera
 	Public world As World
@@ -163,10 +163,17 @@ Public Class MainForm
 		Next
 	End Sub
 
-	Dim propertiesForm As New PropertiesForm()
+	Private pPropertiesForm As PropertiesForm
+	Public ReadOnly Property PropertiesForm() As PropertiesForm
+		Get
+			If pPropertiesForm Is Nothing Then pPropertiesForm = New PropertiesForm(Me)
+			Return pPropertiesForm
+		End Get
+	End Property
+
 	Private Sub PropertiesToolStripMenuItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles PropertiesToolStripMenuItem.Click
 		If selectTool.selection.Count = 0 Then Return
-		propertiesForm.Target = selectTool.selection(0)
-		propertiesForm.Show(Me)
+		If Not PropertiesForm.Visible Then PropertiesForm.Show(Me)
+		PropertiesForm.Reload()
 	End Sub
 End Class

@@ -94,6 +94,7 @@ Public Class SelectTool
 			Next
 		End SyncLock
 		mdown = False
+		Form.PropertiesForm.Reload()
 	End Sub
 
 	Public Overrides Sub Paint(ByVal sender As Object, ByVal e As PaintEventArgs)

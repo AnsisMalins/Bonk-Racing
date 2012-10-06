@@ -32,8 +32,8 @@ Partial Class MainForm
 		Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
 		Me.ImageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.BrushToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-		Me.editButton = New System.Windows.Forms.Button
 		Me.PropertiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
+		Me.editButton = New System.Windows.Forms.Button
 		Me.ContextMenuStrip1.SuspendLayout()
 		Me.SuspendLayout()
 		'
@@ -91,7 +91,7 @@ Partial Class MainForm
 		'ImageToolStripMenuItem
 		'
 		Me.ImageToolStripMenuItem.Name = "ImageToolStripMenuItem"
-		Me.ImageToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
+		Me.ImageToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
 		Me.ImageToolStripMenuItem.Text = "Image..."
 		'
 		'BrushToolStripMenuItem
@@ -99,6 +99,12 @@ Partial Class MainForm
 		Me.BrushToolStripMenuItem.Name = "BrushToolStripMenuItem"
 		Me.BrushToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
 		Me.BrushToolStripMenuItem.Text = "Brush..."
+		'
+		'PropertiesToolStripMenuItem
+		'
+		Me.PropertiesToolStripMenuItem.Name = "PropertiesToolStripMenuItem"
+		Me.PropertiesToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.PropertiesToolStripMenuItem.Text = "Properties..."
 		'
 		'editButton
 		'
@@ -108,12 +114,6 @@ Partial Class MainForm
 		Me.editButton.Size = New System.Drawing.Size(75, 23)
 		Me.editButton.TabIndex = 0
 		Me.editButton.Text = "Edit"
-		'
-		'PropertiesToolStripMenuItem
-		'
-		Me.PropertiesToolStripMenuItem.Name = "PropertiesToolStripMenuItem"
-		Me.PropertiesToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-		Me.PropertiesToolStripMenuItem.Text = "Properties..."
 		'
 		'MainForm
 		'
