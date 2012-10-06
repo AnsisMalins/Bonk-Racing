@@ -40,12 +40,14 @@ Partial Class PropertiesForm
 		Me.reloadButton = New System.Windows.Forms.Button
 		Me.zorder = New System.Windows.Forms.TextBox
 		Me.Label7 = New System.Windows.Forms.Label
+		Me.tname = New System.Windows.Forms.TextBox
+		Me.Label8 = New System.Windows.Forms.Label
 		Me.SuspendLayout()
 		'
 		'Label1
 		'
 		Me.Label1.AutoSize = True
-		Me.Label1.Location = New System.Drawing.Point(55, 15)
+		Me.Label1.Location = New System.Drawing.Point(55, 41)
 		Me.Label1.Name = "Label1"
 		Me.Label1.Size = New System.Drawing.Size(14, 13)
 		Me.Label1.TabIndex = 0
@@ -54,7 +56,7 @@ Partial Class PropertiesForm
 		'Label2
 		'
 		Me.Label2.AutoSize = True
-		Me.Label2.Location = New System.Drawing.Point(55, 41)
+		Me.Label2.Location = New System.Drawing.Point(55, 67)
 		Me.Label2.Name = "Label2"
 		Me.Label2.Size = New System.Drawing.Size(14, 13)
 		Me.Label2.TabIndex = 0
@@ -63,7 +65,7 @@ Partial Class PropertiesForm
 		'Label3
 		'
 		Me.Label3.AutoSize = True
-		Me.Label3.Location = New System.Drawing.Point(34, 67)
+		Me.Label3.Location = New System.Drawing.Point(34, 93)
 		Me.Label3.Name = "Label3"
 		Me.Label3.Size = New System.Drawing.Size(35, 13)
 		Me.Label3.TabIndex = 0
@@ -72,7 +74,7 @@ Partial Class PropertiesForm
 		'Label4
 		'
 		Me.Label4.AutoSize = True
-		Me.Label4.Location = New System.Drawing.Point(31, 93)
+		Me.Label4.Location = New System.Drawing.Point(31, 119)
 		Me.Label4.Name = "Label4"
 		Me.Label4.Size = New System.Drawing.Size(38, 13)
 		Me.Label4.TabIndex = 0
@@ -81,7 +83,7 @@ Partial Class PropertiesForm
 		'Label5
 		'
 		Me.Label5.AutoSize = True
-		Me.Label5.Location = New System.Drawing.Point(37, 119)
+		Me.Label5.Location = New System.Drawing.Point(37, 145)
 		Me.Label5.Name = "Label5"
 		Me.Label5.Size = New System.Drawing.Size(32, 13)
 		Me.Label5.TabIndex = 0
@@ -90,7 +92,7 @@ Partial Class PropertiesForm
 		'Label6
 		'
 		Me.Label6.AutoSize = True
-		Me.Label6.Location = New System.Drawing.Point(12, 145)
+		Me.Label6.Location = New System.Drawing.Point(12, 171)
 		Me.Label6.Name = "Label6"
 		Me.Label6.Size = New System.Drawing.Size(57, 13)
 		Me.Label6.TabIndex = 0
@@ -98,42 +100,42 @@ Partial Class PropertiesForm
 		'
 		'x
 		'
-		Me.x.Location = New System.Drawing.Point(75, 12)
+		Me.x.Location = New System.Drawing.Point(75, 38)
 		Me.x.Name = "x"
 		Me.x.Size = New System.Drawing.Size(97, 20)
 		Me.x.TabIndex = 1
 		'
 		'y
 		'
-		Me.y.Location = New System.Drawing.Point(75, 38)
+		Me.y.Location = New System.Drawing.Point(75, 64)
 		Me.y.Name = "y"
 		Me.y.Size = New System.Drawing.Size(97, 20)
 		Me.y.TabIndex = 1
 		'
 		'width
 		'
-		Me.width.Location = New System.Drawing.Point(75, 64)
+		Me.width.Location = New System.Drawing.Point(75, 90)
 		Me.width.Name = "width"
 		Me.width.Size = New System.Drawing.Size(97, 20)
 		Me.width.TabIndex = 1
 		'
 		'height
 		'
-		Me.height.Location = New System.Drawing.Point(75, 90)
+		Me.height.Location = New System.Drawing.Point(75, 116)
 		Me.height.Name = "height"
 		Me.height.Size = New System.Drawing.Size(97, 20)
 		Me.height.TabIndex = 1
 		'
 		'mass
 		'
-		Me.mass.Location = New System.Drawing.Point(75, 116)
+		Me.mass.Location = New System.Drawing.Point(75, 142)
 		Me.mass.Name = "mass"
 		Me.mass.Size = New System.Drawing.Size(97, 20)
 		Me.mass.TabIndex = 1
 		'
 		'restitution
 		'
-		Me.restitution.Location = New System.Drawing.Point(75, 142)
+		Me.restitution.Location = New System.Drawing.Point(75, 168)
 		Me.restitution.Name = "restitution"
 		Me.restitution.Size = New System.Drawing.Size(97, 20)
 		Me.restitution.TabIndex = 1
@@ -141,7 +143,7 @@ Partial Class PropertiesForm
 		'locked
 		'
 		Me.locked.AutoSize = True
-		Me.locked.Location = New System.Drawing.Point(75, 194)
+		Me.locked.Location = New System.Drawing.Point(75, 220)
 		Me.locked.Name = "locked"
 		Me.locked.Size = New System.Drawing.Size(62, 17)
 		Me.locked.TabIndex = 2
@@ -151,7 +153,7 @@ Partial Class PropertiesForm
 		'solid
 		'
 		Me.solid.AutoSize = True
-		Me.solid.Location = New System.Drawing.Point(75, 217)
+		Me.solid.Location = New System.Drawing.Point(75, 243)
 		Me.solid.Name = "solid"
 		Me.solid.Size = New System.Drawing.Size(49, 17)
 		Me.solid.TabIndex = 2
@@ -160,7 +162,7 @@ Partial Class PropertiesForm
 		'
 		'Button1
 		'
-		Me.Button1.Location = New System.Drawing.Point(97, 245)
+		Me.Button1.Location = New System.Drawing.Point(97, 271)
 		Me.Button1.Name = "Button1"
 		Me.Button1.Size = New System.Drawing.Size(75, 23)
 		Me.Button1.TabIndex = 3
@@ -169,7 +171,7 @@ Partial Class PropertiesForm
 		'
 		'reloadButton
 		'
-		Me.reloadButton.Location = New System.Drawing.Point(16, 245)
+		Me.reloadButton.Location = New System.Drawing.Point(16, 271)
 		Me.reloadButton.Name = "reloadButton"
 		Me.reloadButton.Size = New System.Drawing.Size(75, 23)
 		Me.reloadButton.TabIndex = 4
@@ -178,7 +180,7 @@ Partial Class PropertiesForm
 		'
 		'zorder
 		'
-		Me.zorder.Location = New System.Drawing.Point(75, 168)
+		Me.zorder.Location = New System.Drawing.Point(75, 194)
 		Me.zorder.Name = "zorder"
 		Me.zorder.Size = New System.Drawing.Size(97, 20)
 		Me.zorder.TabIndex = 1
@@ -186,17 +188,33 @@ Partial Class PropertiesForm
 		'Label7
 		'
 		Me.Label7.AutoSize = True
-		Me.Label7.Location = New System.Drawing.Point(26, 171)
+		Me.Label7.Location = New System.Drawing.Point(26, 197)
 		Me.Label7.Name = "Label7"
 		Me.Label7.Size = New System.Drawing.Size(43, 13)
 		Me.Label7.TabIndex = 0
 		Me.Label7.Text = "Z Order"
 		'
+		'tname
+		'
+		Me.tname.Location = New System.Drawing.Point(75, 12)
+		Me.tname.Name = "tname"
+		Me.tname.Size = New System.Drawing.Size(97, 20)
+		Me.tname.TabIndex = 1
+		'
+		'Label8
+		'
+		Me.Label8.AutoSize = True
+		Me.Label8.Location = New System.Drawing.Point(34, 15)
+		Me.Label8.Name = "Label8"
+		Me.Label8.Size = New System.Drawing.Size(35, 13)
+		Me.Label8.TabIndex = 0
+		Me.Label8.Text = "Name"
+		'
 		'PropertiesForm
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-		Me.ClientSize = New System.Drawing.Size(184, 278)
+		Me.ClientSize = New System.Drawing.Size(184, 312)
 		Me.Controls.Add(Me.reloadButton)
 		Me.Controls.Add(Me.Button1)
 		Me.Controls.Add(Me.solid)
@@ -207,6 +225,7 @@ Partial Class PropertiesForm
 		Me.Controls.Add(Me.height)
 		Me.Controls.Add(Me.width)
 		Me.Controls.Add(Me.y)
+		Me.Controls.Add(Me.tname)
 		Me.Controls.Add(Me.x)
 		Me.Controls.Add(Me.Label7)
 		Me.Controls.Add(Me.Label6)
@@ -214,6 +233,7 @@ Partial Class PropertiesForm
 		Me.Controls.Add(Me.Label4)
 		Me.Controls.Add(Me.Label3)
 		Me.Controls.Add(Me.Label2)
+		Me.Controls.Add(Me.Label8)
 		Me.Controls.Add(Me.Label1)
 		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
 		Me.Name = "PropertiesForm"
@@ -240,4 +260,6 @@ Partial Class PropertiesForm
 	Friend WithEvents reloadButton As System.Windows.Forms.Button
 	Friend WithEvents zorder As System.Windows.Forms.TextBox
 	Friend WithEvents Label7 As System.Windows.Forms.Label
+	Friend WithEvents tname As System.Windows.Forms.TextBox
+	Friend WithEvents Label8 As System.Windows.Forms.Label
 End Class

@@ -96,7 +96,7 @@ Public Structure Vector
 	End Operator
 
 	Public Overrides Function ToString() As String
-		Return pX.ToString() & ", " & pY.ToString()
+		Return "x=""" & pX.ToString() & """ y=""" & pY.ToString() & """"
 	End Function
 
 	Public Function GetLength() As Single

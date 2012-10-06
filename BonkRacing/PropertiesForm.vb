@@ -19,6 +19,7 @@
 			locked.Checked = value.IsLocked
 			solid.Checked = value.IsSolid
 			zorder.Text = value.ZOrder.ToString()
+			tname.Text = value.Name
 		Else
 			x.Text = ""
 			y.Text = ""
@@ -29,6 +30,7 @@
 			locked.Checked = False
 			solid.Checked = False
 			zorder.Text = ""
+			tname.Text = ""
 		End If
 		ClearTags()
 	End Sub
@@ -42,6 +44,8 @@
 			If locked.Tag IsNot Nothing Then i.IsLocked = locked.Checked
 			If solid.Tag IsNot Nothing Then i.IsSolid = solid.Checked
 			If zorder.Tag IsNot Nothing Then i.ZOrder = Integer.Parse(zorder.Text)
+			If tname.Tag IsNot Nothing Then i.Name = tname.Text
+			If i.Name = "player" Then mainForm.player = i
 		Next
 		ClearTags()
 	End Sub
@@ -52,7 +56,7 @@
 		Hide()
 	End Sub
 
-	Private Sub PropertyChanged(ByVal sender As Object, ByVal e As EventArgs) Handles y.TextChanged, x.TextChanged, width.TextChanged, solid.CheckedChanged, restitution.TextChanged, mass.TextChanged, locked.CheckedChanged, height.TextChanged, zorder.TextChanged
+	Private Sub PropertyChanged(ByVal sender As Object, ByVal e As EventArgs) Handles y.TextChanged, x.TextChanged, width.TextChanged, solid.CheckedChanged, restitution.TextChanged, mass.TextChanged, locked.CheckedChanged, height.TextChanged, zorder.TextChanged, tname.TextChanged
 		Dim control As Control = DirectCast(sender, Control)
 		control.Tag = ""
 	End Sub
@@ -71,5 +75,6 @@
 		locked.Tag = Nothing
 		solid.Tag = Nothing
 		zorder.Tag = Nothing
+		tname.Tag = Nothing
 	End Sub
 End Class

@@ -1,21 +1,64 @@
 ﻿Option Explicit On
 Option Infer Off
 Option Strict On
+Imports System.IO
+Imports System.Xml
 
 Public Class MainForm
 
-	Private Sub LoadLevel1()
+	Private Sub LoadLevel(ByVal fileName As String)
+		Dim xml As New XmlDocument()
+		xml.Load(fileName)
 		world = New World()
-		world.Speed = 0.001
-		world.Gravity = New Vector(0, 1)
-		Dim floor As New Entity(New Rectangle(50, 660, 9001, 20), New TextureBrush(My.Resources.wtffloor))
-		floor.Restitution = 0.5
-		world.Entities.Add(floor)
-		Dim discord As New Entity(New Rectangle(200, 200, 40, 80), My.Resources.discord, 1, 0.5)
-		player = discord
-		world.Entities.Add(discord)
-		camera = New Camera(ClientSize, Vector.Zero)
-		camera.Speed = 0.1
+		Dim worldNode As XmlNode = xml.SelectSingleNode("//world")
+		If worldNode IsNot Nothing Then
+			Dim attr1 As XmlAttribute, attr2 As XmlAttribute
+			attr1 = worldNode.Attributes("gx")
+			attr2 = worldNode.Attributes("gy")
+			If attr1 IsNot Nothing AndAlso attr2 IsNot Nothing Then world.Gravity = New Vector(Single.Parse(attr1.Value), Single.Parse(attr2.Value))
+			attr1 = worldNode.Attributes("speed")
+			If attr1 IsNot Nothing Then world.Speed = Single.Parse(attr1.Value)
+		End If
+		SyncLock world.Entities
+			For Each i As XmlNode In xml.SelectNodes("//entity")
+				Dim entity As New Entity(i)
+				world.Entities.Add(entity)
+				If entity.Name = "player" Then player = entity
+			Next
+		End SyncLock
+		Dim cameraNode As XmlNode = xml.SelectSingleNode("//camera")
+		If cameraNode IsNot Nothing Then
+			Dim attr1 As XmlAttribute, attr2 As XmlAttribute
+			attr1 = cameraNode.Attributes("w")
+			attr2 = cameraNode.Attributes("h")
+			If attr1 IsNot Nothing AndAlso attr2 IsNot Nothing Then camera = New Camera(New Size(Integer.Parse(attr1.Value), Integer.Parse(attr2.Value)), Vector.Zero) Else Return
+			attr1 = cameraNode.Attributes("x")
+			attr2 = cameraNode.Attributes("y")
+			If attr1 IsNot Nothing AndAlso attr2 IsNot Nothing Then camera.Location = New Vector(Single.Parse(attr1.Value), Single.Parse(attr2.Value))
+			attr1 = cameraNode.Attributes("speed")
+			camera.Speed = If(attr1 IsNot Nothing, Single.Parse(attr1.Value), 1)
+		End If
+	End Sub
+
+	Private Sub SaveLevel(ByVal fileName As String)
+		Using writer As New StreamWriter(fileName)
+			writer.WriteLine("<world" _
+			& " gx=""" & world.Gravity.X & """" _
+			& " gy=""" & world.Gravity.Y & """" _
+			& " speed=""" & world.Speed & """>")
+			writer.WriteLine("<camera" _
+			& " w=""" & camera.Size.X & """" _
+			& " h=""" & camera.Size.Y & """" _
+			& " x=""" & camera.Location.X & """" _
+			& " y=""" & camera.Location.Y & """" _
+			& " speed=""" & camera.Speed & """/>")
+			SyncLock world.Entities
+				For Each i As Entity In world.Entities
+					writer.WriteLine(i.ToXml())
+				Next
+			End SyncLock
+			writer.Write("</world>")
+		End Using
 	End Sub
 
 	Private resizeTool As New ResizeTool()
@@ -30,15 +73,14 @@ Public Class MainForm
 	Private prevSecond As Long
 	Private fpsTemp As Integer
 	Public FramesPerSecond As Integer
-	Private player As Entity
+	Public player As Entity
 	Private Shared Random As New Random()
 
 	Public Sub New()
 		InitializeComponent()
 		ClientSize = New Size(1024, 600)
-		resources = New List(Of IDisposable)()
-		LoadLevel1()
-		world.Start()
+		camera = New Camera(ClientSize, Vector.Zero)
+		world = New World()
 	End Sub
 
 	Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
@@ -122,6 +164,7 @@ Public Class MainForm
 	End Sub
 
 	Private Sub MainForm_MouseDown(ByVal sender As Object, ByVal e As MouseEventArgs) Handles MyBase.MouseDown
+		If e.Button = Windows.Forms.MouseButtons.Middle Then mouseDrag1 = e.Location
 		Return
 		If player.IsColliding Then
 			If e.Button = MouseButtons.Left Then
@@ -156,10 +199,14 @@ Public Class MainForm
 	Private Sub ImageToolStripMenuItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ImageToolStripMenuItem.Click
 		Dim diag As New OpenFileDialog()
 		diag.InitialDirectory = My.Application.Info.DirectoryPath
+		diag.Filter = "Image files (*.jpg;*.png)|*.jpg;*.png|All files (*.*)|*.*"
 		If diag.ShowDialog() <> Windows.Forms.DialogResult.OK Then Return
-		Dim texture As New Bitmap(diag.FileName)
+		Dim fileName As String = Path.GetFileName(diag.FileName)
+		If Path.GetDirectoryName(diag.FileName) <> My.Application.Info.DirectoryPath Then File.Copy(diag.FileName, Path.Combine(My.Application.Info.DirectoryPath, fileName))
+		Dim texture As New Bitmap(fileName)
 		For Each i As Entity In selectTool.selection
 			i.Bitmap = texture
+			i.ImageFile = fileName
 		Next
 	End Sub
 
@@ -170,10 +217,14 @@ Public Class MainForm
 	Private Sub BrushToolStripMenuItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles BrushToolStripMenuItem.Click
 		Dim diag As New OpenFileDialog()
 		diag.InitialDirectory = My.Application.Info.DirectoryPath
+		diag.Filter = "Image files (*.jpg;*.png)|*.jpg;*.png|All files (*.*)|*.*"
 		If diag.ShowDialog() <> Windows.Forms.DialogResult.OK Then Return
-		Dim texture As New TextureBrush(New Bitmap(diag.FileName))
+		Dim fileName As String = Path.GetFileName(diag.FileName)
+		If Path.GetDirectoryName(diag.FileName) <> My.Application.Info.DirectoryPath Then File.Copy(diag.FileName, Path.Combine(My.Application.Info.DirectoryPath, fileName))
+		Dim texture As New TextureBrush(New Bitmap(fileName))
 		For Each i As Entity In selectTool.selection
 			i.Brush = texture
+			i.ImageFile = fileName
 		Next
 	End Sub
 
@@ -207,5 +258,31 @@ Public Class MainForm
 			Next
 		End SyncLock
 		selectTool.selection.Clear()
+	End Sub
+
+	Private Sub loadButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles loadButton.Click
+		Dim diag As New OpenFileDialog()
+		diag.InitialDirectory = My.Application.Info.DirectoryPath
+		diag.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*"
+		If diag.ShowDialog() <> Windows.Forms.DialogResult.OK Then Return
+		Dim fileName As String = Path.GetFileName(diag.FileName)
+		If Path.GetDirectoryName(diag.FileName) <> My.Application.Info.DirectoryPath Then File.Copy(diag.FileName, Path.Combine(My.Application.Info.DirectoryPath, fileName))
+		LoadLevel(fileName)
+	End Sub
+
+	Private Sub saveButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles saveButton.Click
+		Dim diag As New SaveFileDialog()
+		diag.InitialDirectory = My.Application.Info.DirectoryPath
+		diag.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*"
+		If diag.ShowDialog() <> Windows.Forms.DialogResult.OK Then Return
+		SaveLevel(diag.FileName)
+	End Sub
+
+	Dim mouseDrag1 As Vector
+	Private Sub MainForm_MouseMove(ByVal sender As System.Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles MyBase.MouseMove
+		If e.Button <> Windows.Forms.MouseButtons.Middle Then Return
+		Dim mouseDrag2 As Vector = e.Location
+		camera.Location -= mouseDrag2 - mouseDrag1
+		mouseDrag1 = mouseDrag2
 	End Sub
 End Class

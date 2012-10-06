@@ -2,8 +2,43 @@
 Option Infer Off
 Option Strict On
 Imports System.Drawing
+Imports System.Xml
 
 Public Class Entity
+
+	Public Sub New(ByVal xml As XmlNode)
+		Dim attr1 As XmlAttribute, attr2 As XmlAttribute
+		attr1 = xml.Attributes("x")
+		attr2 = xml.Attributes("y")
+		If attr1 IsNot Nothing AndAlso attr2 IsNot Nothing Then Location = New Vector(Single.Parse(attr1.Value), Single.Parse(attr2.Value))
+		attr1 = xml.Attributes("vx")
+		attr2 = xml.Attributes("vy")
+		If attr1 IsNot Nothing AndAlso attr2 IsNot Nothing Then Velocity = New Vector(Single.Parse(attr1.Value), Single.Parse(attr2.Value))
+		attr1 = xml.Attributes("w")
+		attr2 = xml.Attributes("h")
+		If attr1 IsNot Nothing AndAlso attr2 IsNot Nothing Then Size = New Vector(Single.Parse(attr1.Value), Single.Parse(attr2.Value))
+		attr1 = xml.Attributes("mass")
+		Mass = If(attr1 IsNot Nothing, Single.Parse(attr1.Value), 1000000)
+		attr1 = xml.Attributes("rest")
+		If attr1 IsNot Nothing Then Restitution = Single.Parse(attr1.Value)
+		attr1 = xml.Attributes("zorder")
+		If attr1 IsNot Nothing Then ZOrder = Integer.Parse(attr1.Value)
+		attr1 = xml.Attributes("solid")
+		If attr1 IsNot Nothing Then IsSolid = Boolean.Parse(attr1.Value)
+		attr1 = xml.Attributes("locked")
+		If attr1 IsNot Nothing Then IsLocked = Boolean.Parse(attr1.Value)
+		attr1 = xml.Attributes("image")
+		attr2 = xml.Attributes("brush")
+		If attr1 IsNot Nothing Then
+			Bitmap = New Bitmap(attr1.Value)
+		ElseIf attr2 IsNot Nothing Then
+			Brush = New TextureBrush(New Bitmap(attr2.Value))
+		Else
+			Color = Color.Blue
+		End If
+		attr1 = xml.Attributes("name")
+		If attr1 IsNot Nothing Then Name = attr1.Value
+	End Sub
 
 	Public Sub New(ByVal rectangle As RectangleF, ByVal bitmap As Bitmap)
 		Initialize(rectangle)
@@ -75,4 +110,26 @@ Public Class Entity
 	Public IsColliding As Boolean
 
 	Public ZOrder As Integer
+
+	Public ImageFile As String
+
+	Public Name As String
+
+	Public Function ToXml() As String
+		Return "<entity" _
+		& If(Not String.IsNullOrEmpty(Name), " name=""" & Name & """", "") _
+		& " x=""" & Location.X.ToString() & """" _
+		& " y=""" & Location.Y.ToString() & """" _
+		& " vx=""" & Velocity.X.ToString() & """" _
+		& " vy=""" & Velocity.Y.ToString() & """" _
+		& " w=""" & Size.X.ToString() & """" _
+		& " h=""" & Size.Y.ToString() & """" _
+		& " mass=""" & Mass.ToString() & """" _
+		& " locked=""" & IsLocked.ToString() & """" _
+		& " solid=""" & IsSolid.ToString() & """" _
+		& " rest=""" & Restitution.ToString() & """" _
+		& " zorder=""" & ZOrder.ToString() & """" _
+		& If(Bitmap IsNot Nothing, " image=""" & ImageFile & """", If(Brush IsNot Nothing, " brush=""" & ImageFile & """", "")) _
+		& "/>"
+	End Function
 End Class
