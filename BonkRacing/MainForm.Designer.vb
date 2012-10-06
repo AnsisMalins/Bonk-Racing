@@ -41,6 +41,7 @@ Partial Class MainForm
 		Me.startButton.Size = New System.Drawing.Size(75, 23)
 		Me.startButton.TabIndex = 0
 		Me.startButton.Text = "Start"
+		Me.startButton.Visible = False
 		'
 		'stopButton
 		'
@@ -49,6 +50,7 @@ Partial Class MainForm
 		Me.stopButton.Size = New System.Drawing.Size(75, 23)
 		Me.stopButton.TabIndex = 0
 		Me.stopButton.Text = "Stop"
+		Me.stopButton.Visible = False
 		'
 		'clearButton
 		'
@@ -57,6 +59,7 @@ Partial Class MainForm
 		Me.clearButton.Size = New System.Drawing.Size(75, 23)
 		Me.clearButton.TabIndex = 0
 		Me.clearButton.Text = "Clear"
+		Me.clearButton.Visible = False
 		'
 		'MainForm
 		'
@@ -67,7 +70,10 @@ Partial Class MainForm
 		Me.Controls.Add(Me.stopButton)
 		Me.Controls.Add(Me.startButton)
 		Me.DoubleBuffered = True
+		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
 		Me.Name = "MainForm"
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+		Me.Text = "Bonk Racing"
 		Me.ResumeLayout(False)
 
 	End Sub

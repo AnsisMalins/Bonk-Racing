@@ -5,12 +5,31 @@ Imports System.Drawing
 
 Public Class Entity
 
-	Public Sub New(ByVal location As Vector, ByVal velocity As Vector, ByVal size As Vector, ByVal mass As Single, ByVal color As Color, ByVal restitution As Single)
-		Me.Location = location
-		Me.Velocity = velocity
-		Me.Size = size
-		Me.Mass = If(mass > 0, mass, Single.MaxValue)
+	Public Sub New(ByVal rectangle As RectangleF, ByVal bitmap As Bitmap)
+		Me.Rectangle = rectangle
+		Me.Bitmap = bitmap
+		IsLocked = True
+		Mass = 1000000
+	End Sub
+
+	Public Sub New(ByVal rectangle As RectangleF, ByVal color As Color)
+		Me.Rectangle = rectangle
 		Me.Color = color
+		IsLocked = True
+		Mass = 1000000
+	End Sub
+
+	Public Sub New(ByVal rectangle As RectangleF, ByVal bitmap As Bitmap, ByVal mass As Single, ByVal restitution As Single)
+		Me.Rectangle = rectangle
+		Me.Bitmap = bitmap
+		Me.Mass = mass
+		Me.Restitution = restitution
+	End Sub
+
+	Public Sub New(ByVal rectangle As RectangleF, ByVal color As Color, ByVal mass As Single, ByVal restitution As Single)
+		Me.Rectangle = rectangle
+		Me.Color = color
+		Me.Mass = mass
 		Me.Restitution = restitution
 	End Sub
 
@@ -19,8 +38,8 @@ Public Class Entity
 			Return New RectangleF(Location - Size / 2, Size)
 		End Get
 		Set(ByVal value As RectangleF)
-			Location = New Vector(Rectangle.Location) + New Vector(Rectangle.Size) / 2
-			Size = Rectangle.Size
+			Location = New Vector(value.Location) + New Vector(value.Size) / 2
+			Size = value.Size
 		End Set
 	End Property
 
@@ -37,4 +56,6 @@ Public Class Entity
 	Public Color As Color
 
 	Public Restitution As Single
+
+	Public Bitmap As Bitmap
 End Class
