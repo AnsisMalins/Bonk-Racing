@@ -8,7 +8,6 @@
 	End Sub
 
 	Public Sub Reload()
-		ClearTags()
 		If mainForm.selectTool.selection.Count > 0 Then
 			Dim value As Entity = mainForm.selectTool.selection(0)
 			x.Text = value.Location.X.ToString()
@@ -19,6 +18,7 @@
 			restitution.Text = value.Restitution.ToString()
 			locked.Checked = value.IsLocked
 			solid.Checked = value.IsSolid
+			zorder.Text = value.ZOrder.ToString()
 		Else
 			x.Text = ""
 			y.Text = ""
@@ -28,7 +28,9 @@
 			restitution.Text = ""
 			locked.Checked = False
 			solid.Checked = False
+			zorder.Text = ""
 		End If
+		ClearTags()
 	End Sub
 
 	Private Sub Button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Button1.Click
@@ -39,6 +41,7 @@
 			If restitution.Tag IsNot Nothing Then i.Restitution = Single.Parse(restitution.Text)
 			If locked.Tag IsNot Nothing Then i.IsLocked = locked.Checked
 			If solid.Tag IsNot Nothing Then i.IsSolid = solid.Checked
+			If zorder.Tag IsNot Nothing Then i.ZOrder = Integer.Parse(zorder.Text)
 		Next
 		ClearTags()
 	End Sub
@@ -49,7 +52,7 @@
 		Hide()
 	End Sub
 
-	Private Sub PropertyChanged(ByVal sender As Object, ByVal e As EventArgs) Handles y.TextChanged, x.TextChanged, width.TextChanged, solid.CheckedChanged, restitution.TextChanged, mass.TextChanged, locked.CheckedChanged, height.TextChanged
+	Private Sub PropertyChanged(ByVal sender As Object, ByVal e As EventArgs) Handles y.TextChanged, x.TextChanged, width.TextChanged, solid.CheckedChanged, restitution.TextChanged, mass.TextChanged, locked.CheckedChanged, height.TextChanged, zorder.TextChanged
 		Dim control As Control = DirectCast(sender, Control)
 		control.Tag = ""
 	End Sub
@@ -67,5 +70,6 @@
 		restitution.Tag = Nothing
 		locked.Tag = Nothing
 		solid.Tag = Nothing
+		zorder.Tag = Nothing
 	End Sub
 End Class

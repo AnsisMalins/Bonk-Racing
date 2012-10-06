@@ -73,4 +73,6 @@ Public Class Entity
 	Public Restitution As Single
 
 	Public IsColliding As Boolean
+
+	Public ZOrder As Integer
 End Class

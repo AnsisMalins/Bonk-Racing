@@ -18,6 +18,8 @@ Public Class MainForm
 		camera.Speed = 0.1
 	End Sub
 
+	Private resizeTool As New ResizeTool()
+	Private moveTool As New MoveTool()
 	Private currentTool As BaseTool
 	Private createTool As New CreateTool()
 	Public selectTool As New SelectTool()
@@ -54,6 +56,8 @@ Public Class MainForm
 		SyncLock world.Entities
 			entities = world.Entities.ToArray()
 		End SyncLock
+		Array.Sort(entities, Function(a As Entity, b As Entity) a.ZOrder - b.ZOrder)
+
 		For Each i As Entity In entities
 			If i.Bitmap IsNot Nothing Then
 				e.Graphics.DrawImage(i.Bitmap, i.Rectangle)
@@ -67,17 +71,27 @@ Public Class MainForm
 			i.IsColliding = False
 		Next
 
-		If currentTool IsNot Nothing Then currentTool.Paint(Me, e)
+		If Debugger.IsAttached Then
+			For Each i As Entity In entities
+				e.Graphics.DrawLine(Pens.Cyan, i.Location, i.Location + i.Velocity * world.Speed * 100)
+			Next
+			e.Graphics.DrawLine(Pens.Black, camera.Location + New Vector(-20, 0), camera.Location + New Vector(20, 0))
+			e.Graphics.DrawLine(Pens.Black, camera.Location + New Vector(0, -20), camera.Location + New Vector(0, 20))
+		End If
 
-		e.Graphics.DrawLine(Pens.Black, camera.Location + New Vector(-20, 0), camera.Location + New Vector(20, 0))
-		e.Graphics.DrawLine(Pens.Black, camera.Location + New Vector(0, -20), camera.Location + New Vector(0, 20))
+		If currentTool IsNot Nothing Then
+			If currentTool IsNot selectTool Then selectTool.Paint(Me, e)
+			currentTool.Paint(Me, e)
+		End If
 
 		e.Graphics.TranslateTransform(-camera.X, -camera.Y)
 
-		e.Graphics.DrawString("Physics: " & world.FramesPerSecond & " fps" & Environment.NewLine _
+		e.Graphics.DrawString( _
+		"Physics: " & If(world.IsRunning, world.FramesPerSecond & " fps", "stopped") & Environment.NewLine _
 		& "Rendering: " & FramesPerSecond & " fps" & Environment.NewLine _
 		& "Camera: " & camera.Location.ToString() & Environment.NewLine _
 		& "Cursor: " & mouse.ToString(), Font, Brushes.Black, 6, 6)
+
 		If nowTicks - prevSecond > 10000000 Then
 			FramesPerSecond = fpsTemp
 			fpsTemp = 0
@@ -175,5 +189,23 @@ Public Class MainForm
 		If selectTool.selection.Count = 0 Then Return
 		If Not PropertiesForm.Visible Then PropertiesForm.Show(Me)
 		PropertiesForm.Reload()
+	End Sub
+
+	Private Sub moveButton_Click(ByVal sender As Object, ByVal e As EventArgs) Handles moveButton.Click
+		ActivateTool(moveTool)
+	End Sub
+
+	Private Sub resizeButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles resizeButton.Click
+		ActivateTool(resizeTool)
+	End Sub
+
+	Private Sub MainForm_KeyDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles MyBase.KeyDown
+		If e.KeyCode <> Keys.Delete Then Return
+		SyncLock world.Entities
+			For Each i As Entity In selectTool.selection
+				world.Entities.Remove(i)
+			Next
+		End SyncLock
+		selectTool.selection.Clear()
 	End Sub
 End Class

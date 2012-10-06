@@ -1,4 +1,7 @@
-﻿
+﻿Option Explicit On
+Option Infer Off
+Option Strict On
+
 Public Class BaseTool
 
 	Public Sub Activate(ByVal form As MainForm)
@@ -109,5 +112,96 @@ Public Class SelectTool
 		Dim downRight As New Vector(Math.Max(mouse1.X, mouse2.X), Math.Max(mouse1.Y, mouse2.Y))
 		If (downRight - topLeft).GetLength() < 3 Then Return
 		e.Graphics.DrawRectangle(Pens.Green, New Rectangle(topLeft, downRight - topLeft))
+	End Sub
+End Class
+
+Public Class MoveTool
+	Inherits BaseTool
+
+	Private mdown As Boolean
+	Private mouse1 As Vector
+
+	Public Overrides Sub MouseDown(ByVal sender As Object, ByVal e As MouseEventArgs)
+		If e.Button <> MouseButtons.Left Then Return
+		mdown = True
+		mouse1 = Form.camera.VectorToWorld(e.Location)
+	End Sub
+
+	Public Overrides Sub MouseMove(ByVal sender As Object, ByVal e As MouseEventArgs)
+		If Not mdown Then Return
+		Dim mouse2 As Vector = Form.camera.VectorToWorld(e.Location)
+		For Each i As Entity In Form.selectTool.selection
+			i.Location += mouse2 - mouse1
+			i.Velocity = Vector.Zero
+		Next
+		mouse1 = mouse2
+	End Sub
+
+	Public Overrides Sub MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs)
+		mdown = False
+	End Sub
+End Class
+
+Public Class ResizeTool
+	Inherits BaseTool
+
+	Private mdown As Boolean
+	Private mouse1 As Vector
+
+	Public Overrides Sub MouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs)
+		If e.Button <> MouseButtons.Left Then Return
+		mdown = True
+		mouse1 = Form.camera.VectorToWorld(e.Location)
+	End Sub
+
+	Public Overrides Sub MouseMove(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs)
+		If Not mdown Then Return
+		Dim mouse2 As Vector = Form.camera.VectorToWorld(e.Location)
+		If Form.selectTool.selection.Count = 0 Then Return
+		Dim entity As Entity = Form.selectTool.selection(0)
+		Dim side As Integer = 0
+		If mouse2.X > entity.Rectangle.Left AndAlso mouse2.X < entity.Rectangle.Right Then
+			If mouse2.Y < entity.Location.Y Then
+				side = 1
+			ElseIf mouse2.Y > entity.Location.Y Then
+				side = 2
+			End If
+		ElseIf mouse2.Y > entity.Rectangle.Top AndAlso mouse2.Y < entity.Rectangle.Bottom Then
+			If mouse2.X < entity.Location.X Then
+				side = 3
+			ElseIf mouse2.X > entity.Location.X Then
+				side = 4
+			End If
+		End If
+		Dim dmouse As Vector = mouse2 - mouse1
+		For Each i As Entity In Form.selectTool.selection
+			Dim rect As RectangleF = i.Rectangle
+			Select Case side
+				Case 1
+					rect.Inflate(0, -dmouse.Y / 2)
+					rect.Offset(0, dmouse.Y / 2)
+				Case 2
+					rect.Inflate(0, dmouse.Y / 2)
+					rect.Offset(0, dmouse.Y / 2)
+				Case 3
+					rect.Inflate(-dmouse.X / 2, 0)
+					rect.Offset(dmouse.X / 2, 0)
+				Case 4
+					rect.Inflate(dmouse.X / 2, 0)
+					rect.Offset(dmouse.X / 2, 0)
+			End Select
+			i.Rectangle = rect
+		Next
+		mouse1 = mouse2
+	End Sub
+
+	Public Overrides Sub MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs)
+		mdown = False
+	End Sub
+
+	Public Overrides Sub Paint(ByVal sender As Object, ByVal e As System.Windows.Forms.PaintEventArgs)
+		If Form.selectTool.selection.Count = 0 Then Return
+		Dim entity As Entity = Form.selectTool.selection(0)
+		e.Graphics.DrawRectangle(Pens.Red, Rectangle.Round(entity.Rectangle))
 	End Sub
 End Class

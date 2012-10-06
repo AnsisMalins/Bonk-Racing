@@ -34,6 +34,8 @@ Partial Class MainForm
 		Me.BrushToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.PropertiesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.editButton = New System.Windows.Forms.Button
+		Me.moveButton = New System.Windows.Forms.Button
+		Me.resizeButton = New System.Windows.Forms.Button
 		Me.ContextMenuStrip1.SuspendLayout()
 		Me.SuspendLayout()
 		'
@@ -86,24 +88,24 @@ Partial Class MainForm
 		'
 		Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImageToolStripMenuItem, Me.BrushToolStripMenuItem, Me.PropertiesToolStripMenuItem})
 		Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-		Me.ContextMenuStrip1.Size = New System.Drawing.Size(153, 92)
+		Me.ContextMenuStrip1.Size = New System.Drawing.Size(137, 70)
 		'
 		'ImageToolStripMenuItem
 		'
 		Me.ImageToolStripMenuItem.Name = "ImageToolStripMenuItem"
-		Me.ImageToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.ImageToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
 		Me.ImageToolStripMenuItem.Text = "Image..."
 		'
 		'BrushToolStripMenuItem
 		'
 		Me.BrushToolStripMenuItem.Name = "BrushToolStripMenuItem"
-		Me.BrushToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.BrushToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
 		Me.BrushToolStripMenuItem.Text = "Brush..."
 		'
 		'PropertiesToolStripMenuItem
 		'
 		Me.PropertiesToolStripMenuItem.Name = "PropertiesToolStripMenuItem"
-		Me.PropertiesToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.PropertiesToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
 		Me.PropertiesToolStripMenuItem.Text = "Properties..."
 		'
 		'editButton
@@ -115,6 +117,22 @@ Partial Class MainForm
 		Me.editButton.TabIndex = 0
 		Me.editButton.Text = "Edit"
 		'
+		'moveButton
+		'
+		Me.moveButton.Location = New System.Drawing.Point(640, 12)
+		Me.moveButton.Name = "moveButton"
+		Me.moveButton.Size = New System.Drawing.Size(75, 23)
+		Me.moveButton.TabIndex = 0
+		Me.moveButton.Text = "Move"
+		'
+		'resizeButton
+		'
+		Me.resizeButton.Location = New System.Drawing.Point(721, 12)
+		Me.resizeButton.Name = "resizeButton"
+		Me.resizeButton.Size = New System.Drawing.Size(75, 23)
+		Me.resizeButton.TabIndex = 0
+		Me.resizeButton.Text = "Resize"
+		'
 		'MainForm
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -124,6 +142,8 @@ Partial Class MainForm
 		Me.Controls.Add(Me.selectButton)
 		Me.Controls.Add(Me.createButton)
 		Me.Controls.Add(Me.editButton)
+		Me.Controls.Add(Me.moveButton)
+		Me.Controls.Add(Me.resizeButton)
 		Me.Controls.Add(Me.clearButton)
 		Me.Controls.Add(Me.stopButton)
 		Me.DoubleBuffered = True
@@ -146,5 +166,7 @@ Partial Class MainForm
 	Friend WithEvents BrushToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Private WithEvents editButton As System.Windows.Forms.Button
 	Friend WithEvents PropertiesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Private WithEvents moveButton As System.Windows.Forms.Button
+	Private WithEvents resizeButton As System.Windows.Forms.Button
 
 End Class

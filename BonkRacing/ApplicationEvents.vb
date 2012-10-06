@@ -6,9 +6,9 @@ Imports Microsoft.VisualBasic.ApplicationServices
 Namespace My
 	Partial Friend Class MyApplication
 
-		Protected Overrides Function OnUnhandledException(ByVal e As UnhandledExceptionEventArgs) As Boolean
+		Private Sub MyApplication_UnhandledException(ByVal sender As Object, ByVal e As UnhandledExceptionEventArgs) Handles MyClass.UnhandledException
 			e.ExitApplication = False
-			MessageBox.Show(e.ToString())
-		End Function
+			MessageBox.Show(If(Debugger.IsAttached, e.ToString(), e.Exception.Message))
+		End Sub
 	End Class
 End Namespace

@@ -38,6 +38,8 @@ Partial Class PropertiesForm
 		Me.solid = New System.Windows.Forms.CheckBox
 		Me.Button1 = New System.Windows.Forms.Button
 		Me.reloadButton = New System.Windows.Forms.Button
+		Me.zorder = New System.Windows.Forms.TextBox
+		Me.Label7 = New System.Windows.Forms.Label
 		Me.SuspendLayout()
 		'
 		'Label1
@@ -139,7 +141,7 @@ Partial Class PropertiesForm
 		'locked
 		'
 		Me.locked.AutoSize = True
-		Me.locked.Location = New System.Drawing.Point(75, 168)
+		Me.locked.Location = New System.Drawing.Point(75, 194)
 		Me.locked.Name = "locked"
 		Me.locked.Size = New System.Drawing.Size(62, 17)
 		Me.locked.TabIndex = 2
@@ -149,7 +151,7 @@ Partial Class PropertiesForm
 		'solid
 		'
 		Me.solid.AutoSize = True
-		Me.solid.Location = New System.Drawing.Point(75, 191)
+		Me.solid.Location = New System.Drawing.Point(75, 217)
 		Me.solid.Name = "solid"
 		Me.solid.Size = New System.Drawing.Size(49, 17)
 		Me.solid.TabIndex = 2
@@ -158,7 +160,7 @@ Partial Class PropertiesForm
 		'
 		'Button1
 		'
-		Me.Button1.Location = New System.Drawing.Point(97, 219)
+		Me.Button1.Location = New System.Drawing.Point(97, 245)
 		Me.Button1.Name = "Button1"
 		Me.Button1.Size = New System.Drawing.Size(75, 23)
 		Me.Button1.TabIndex = 3
@@ -167,34 +169,53 @@ Partial Class PropertiesForm
 		'
 		'reloadButton
 		'
-		Me.reloadButton.Location = New System.Drawing.Point(16, 219)
+		Me.reloadButton.Location = New System.Drawing.Point(16, 245)
 		Me.reloadButton.Name = "reloadButton"
 		Me.reloadButton.Size = New System.Drawing.Size(75, 23)
 		Me.reloadButton.TabIndex = 4
 		Me.reloadButton.Text = "Reload"
 		Me.reloadButton.UseVisualStyleBackColor = True
 		'
+		'zorder
+		'
+		Me.zorder.Location = New System.Drawing.Point(75, 168)
+		Me.zorder.Name = "zorder"
+		Me.zorder.Size = New System.Drawing.Size(97, 20)
+		Me.zorder.TabIndex = 1
+		'
+		'Label7
+		'
+		Me.Label7.AutoSize = True
+		Me.Label7.Location = New System.Drawing.Point(26, 171)
+		Me.Label7.Name = "Label7"
+		Me.Label7.Size = New System.Drawing.Size(43, 13)
+		Me.Label7.TabIndex = 0
+		Me.Label7.Text = "Z Order"
+		'
 		'PropertiesForm
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-		Me.ClientSize = New System.Drawing.Size(184, 254)
+		Me.ClientSize = New System.Drawing.Size(184, 278)
 		Me.Controls.Add(Me.reloadButton)
 		Me.Controls.Add(Me.Button1)
 		Me.Controls.Add(Me.solid)
 		Me.Controls.Add(Me.locked)
+		Me.Controls.Add(Me.zorder)
 		Me.Controls.Add(Me.restitution)
 		Me.Controls.Add(Me.mass)
 		Me.Controls.Add(Me.height)
 		Me.Controls.Add(Me.width)
 		Me.Controls.Add(Me.y)
 		Me.Controls.Add(Me.x)
+		Me.Controls.Add(Me.Label7)
 		Me.Controls.Add(Me.Label6)
 		Me.Controls.Add(Me.Label5)
 		Me.Controls.Add(Me.Label4)
 		Me.Controls.Add(Me.Label3)
 		Me.Controls.Add(Me.Label2)
 		Me.Controls.Add(Me.Label1)
+		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
 		Me.Name = "PropertiesForm"
 		Me.Text = "Properties"
 		Me.ResumeLayout(False)
@@ -217,4 +238,6 @@ Partial Class PropertiesForm
 	Friend WithEvents solid As System.Windows.Forms.CheckBox
 	Friend WithEvents Button1 As System.Windows.Forms.Button
 	Friend WithEvents reloadButton As System.Windows.Forms.Button
+	Friend WithEvents zorder As System.Windows.Forms.TextBox
+	Friend WithEvents Label7 As System.Windows.Forms.Label
 End Class
