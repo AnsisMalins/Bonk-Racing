@@ -62,11 +62,14 @@ Public Class World
 				fpsTemp += 1
 				SyncLock Entities
 					For Each i As Entity In Entities
+						If Not i.IsSolid Then Continue For
 						Dim iRect As New RectangleF(i.Location + i.Velocity * Speed - i.Size / 2, i.Size)
 						For Each j As Entity In Entities
 							If i Is j Then Continue For
 							Dim jRect As RectangleF = j.Rectangle
 							If RectangleF.Intersect(iRect, jRect) <> RectangleF.Empty Then
+								i.IsColliding = True
+								j.IsColliding = True
 								Dim iNewVelocity As Vector = (i.Restitution * j.Restitution * j.Mass * (j.Velocity - i.Velocity) + i.Mass * i.Velocity + j.Mass * j.Velocity) / (i.Mass + j.Mass)
 								Dim jNewVelocity As Vector = (j.Restitution * i.Restitution * i.Mass * (i.Velocity - j.Velocity) + j.Mass * j.Velocity + i.Mass * i.Velocity) / (j.Mass + i.Mass)
 								If i.IsLocked Then

@@ -78,4 +78,28 @@ Public Structure Vector
 	Public Shared Widening Operator CType(ByVal a As PointF) As Vector
 		Return New Vector(a.X, a.Y)
 	End Operator
+
+	Public Shared Function Subtract(ByVal a As Point, ByVal b As Point) As Vector
+		Return New Vector(a.X - b.X, a.Y - b.Y)
+	End Function
+
+	Public Shared Widening Operator CType(ByVal a As Vector) As Point
+		Return New Point(CInt(a.pX), CInt(a.pY))
+	End Operator
+
+	Public Shared Widening Operator CType(ByVal a As Vector) As Size
+		Return New Size(CInt(a.pX), CInt(a.pY))
+	End Operator
+
+	Public Shared Widening Operator CType(ByVal a As Size) As Vector
+		Return New Vector(a.Width, a.Height)
+	End Operator
+
+	Public Overrides Function ToString() As String
+		Return pX.ToString() & ", " & pY.ToString()
+	End Function
+
+	Public Function GetLength() As Single
+		Return CSng(Math.Sqrt(Math.Pow(pX, 2) + Math.Pow(pY, 2)))
+	End Function
 End Structure

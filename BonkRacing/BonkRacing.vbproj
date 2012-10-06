@@ -55,8 +55,10 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationEvents.vb" />
     <Compile Include="Camera.vb" />
     <Compile Include="Entity.vb" />
+    <Compile Include="LevelEditor.vb" />
     <Compile Include="MainForm.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -79,6 +81,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="PropertiesForm.Designer.vb">
+      <DependentUpon>PropertiesForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PropertiesForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Vector.vb" />
     <Compile Include="World.vb" />
   </ItemGroup>
@@ -91,6 +99,9 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertiesForm.resx">
+      <DependentUpon>PropertiesForm.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +117,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\discord.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\wtffloor.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
