@@ -215,6 +215,6 @@ Public Class ResizeTool
 		Dim entity As Entity = Form.selectTool.selection(0)
 		e.Graphics.DrawRectangle(Pens.Red, Rectangle.Round(entity.Rectangle))
 		If Not mdown Then Return
-		e.Graphics.DrawString(entity.Location.ToString(), Form.Font, Brushes.Black, mouse1 + New Vector(16, 16))
+		e.Graphics.DrawString(entity.Size.ToString(), Form.Font, Brushes.Black, mouse1 + New Vector(16, 16))
 	End Sub
 End Class

@@ -11,6 +11,11 @@ Public Structure Vector
 		pY = y
 	End Sub
 
+	Public Sub New(ByVal x As Double, ByVal y As Double)
+		pX = CSng(x)
+		pY = CSng(y)
+	End Sub
+
 	Public Sub New(ByVal size As SizeF)
 		pX = size.Width
 		pY = size.Height

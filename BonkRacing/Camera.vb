@@ -7,6 +7,7 @@ Public Class Camera
 	Public Sub New(ByVal size As Size, ByVal location As Vector)
 		Me.Size = size
 		Me.Location = location
+		Speed = 0.1
 	End Sub
 
 	Public Function VectorToWorld(ByVal v As Vector) As Vector

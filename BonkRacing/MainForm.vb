@@ -6,6 +6,23 @@ Imports System.Xml
 
 Public Class MainForm
 
+	Private direction As Integer = 1
+	Private Sub PlayerControl(ByVal keyData As Keys)
+		If player Is Nothing Then Return
+		Select Case keyData
+			Case Keys.Left
+				If direction <> -1 Then player.Bitmap.RotateFlip(RotateFlipType.RotateNoneFlipX)
+				direction = -1
+			Case Keys.Right
+				If direction <> 1 Then player.Bitmap.RotateFlip(RotateFlipType.RotateNoneFlipX)
+				direction = 1
+			Case Keys.Up
+				If player.IsColliding Then player.Velocity += New Vector(0.1 * direction, -0.4)
+			Case Keys.Down
+				If player.IsColliding Then player.Velocity += New Vector(0.2 * direction, -0.2)
+		End Select
+	End Sub
+
 	Private Sub LoadLevel(ByVal fileName As String)
 		Dim xml As New XmlDocument()
 		xml.Load(fileName)
@@ -93,9 +110,8 @@ Public Class MainForm
 		fpsTemp += 1
 
 		Dim mouse As Vector = camera.VectorToWorld(PointToClient(Control.MousePosition))
-		'MainForm_MouseDown(Nothing, New MouseEventArgs(If(Random.Next(0, 99) >= 50, MouseButtons.Left, MouseButtons.Right), 1, 0, 0, 0))
 
-		camera.Follow(player)
+		If world.IsRunning Then camera.Follow(player)
 		e.Graphics.TranslateTransform(camera.X, camera.Y)
 
 		Dim entities As Entity()
@@ -162,13 +178,13 @@ Public Class MainForm
 			world.Start()
 			startButton.Text = "Stop"
 		End If
-		Focus()
 	End Sub
 
 	Private Sub clearButton_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ClearToolStripMenuItem.Click
 		SyncLock world.Entities
 			world.Entities.Clear()
 		End SyncLock
+		camera.Location = Vector.Zero
 	End Sub
 
 	Private Sub MainForm_MouseDown(ByVal sender As Object, ByVal e As MouseEventArgs) Handles MyBase.MouseDown
@@ -262,23 +278,30 @@ Public Class MainForm
 	End Sub
 
 	Protected Overrides Function ProcessCmdKey(ByRef msg As System.Windows.Forms.Message, ByVal keyData As System.Windows.Forms.Keys) As Boolean
-		Select Case keyData
-			Case Keys.Delete
-				SyncLock world.Entities
-					For Each i As Entity In selectTool.selection
-						world.Entities.Remove(i)
-					Next
-				End SyncLock
-				selectTool.selection.Clear()
-			Case Keys.M
-				moveButton_Click(Nothing, Nothing)
-			Case Keys.C
-				createButton_Click(Nothing, Nothing)
-			Case Keys.R
-				resizeButton_Click(Nothing, Nothing)
-			Case Keys.F5
-				startButton_Click(Nothing, Nothing)
-		End Select
+		If world.IsRunning Then
+			If keyData = Keys.F5 Then startButton_Click(Nothing, Nothing)
+			PlayerControl(keyData)
+		Else
+			Select Case keyData
+				Case Keys.Delete
+					SyncLock world.Entities
+						For Each i As Entity In selectTool.selection
+							world.Entities.Remove(i)
+						Next
+					End SyncLock
+					selectTool.selection.Clear()
+				Case Keys.M
+					moveButton_Click(Nothing, Nothing)
+				Case Keys.C
+					createButton_Click(Nothing, Nothing)
+				Case Keys.R
+					resizeButton_Click(Nothing, Nothing)
+				Case Keys.F5
+					startButton_Click(Nothing, Nothing)
+				Case Keys.P
+					PropertiesToolStripMenuItem_Click(Nothing, Nothing)
+			End Select
+		End If
 		Return MyBase.ProcessCmdKey(msg, keyData)
 	End Function
 
