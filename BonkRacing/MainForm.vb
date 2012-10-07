@@ -78,8 +78,12 @@ Public Class MainForm
 
 	Public Sub New()
 		InitializeComponent()
-		ClientSize = New Size(1024, 600)
-		camera = New Camera(ClientSize, Vector.Zero)
+		Dim resolution As New Size(1024, 600)
+		If Screen.PrimaryScreen.Bounds.Size = resolution _
+		Then FormBorderStyle = Windows.Forms.FormBorderStyle.None _
+		Else FormBorderStyle = Windows.Forms.FormBorderStyle.FixedSingle
+		ClientSize = resolution
+		camera = New Camera(resolution, Vector.Zero)
 		world = New World()
 	End Sub
 
@@ -89,7 +93,7 @@ Public Class MainForm
 		fpsTemp += 1
 
 		Dim mouse As Vector = camera.VectorToWorld(PointToClient(Control.MousePosition))
-		MainForm_MouseDown(Nothing, New MouseEventArgs(If(Random.Next(0, 99) >= 50, MouseButtons.Left, MouseButtons.Right), 1, 0, 0, 0))
+		'MainForm_MouseDown(Nothing, New MouseEventArgs(If(Random.Next(0, 99) >= 50, MouseButtons.Left, MouseButtons.Right), 1, 0, 0, 0))
 
 		camera.Follow(player)
 		e.Graphics.TranslateTransform(camera.X, camera.Y)
@@ -119,6 +123,7 @@ Public Class MainForm
 			Next
 			e.Graphics.DrawLine(Pens.Black, camera.Location + New Vector(-20, 0), camera.Location + New Vector(20, 0))
 			e.Graphics.DrawLine(Pens.Black, camera.Location + New Vector(0, -20), camera.Location + New Vector(0, 20))
+			e.Graphics.DrawString(camera.Location.ToString(), Font, Brushes.Black, camera.Location)
 		End If
 
 		If currentTool IsNot Nothing Then
@@ -150,14 +155,17 @@ Public Class MainForm
 	End Sub
 
 	Private Sub startButton_Click(ByVal sender As Object, ByVal e As EventArgs) Handles startButton.Click
-		world.Start()
+		If world.IsRunning Then
+			world.Stop()
+			startButton.Text = "Start"
+		Else
+			world.Start()
+			startButton.Text = "Stop"
+		End If
+		Focus()
 	End Sub
 
-	Private Sub stopButton_Click(ByVal sender As Object, ByVal e As EventArgs) Handles stopButton.Click
-		world.Stop()
-	End Sub
-
-	Private Sub clearButton_Click(ByVal sender As Object, ByVal e As EventArgs) Handles clearButton.Click
+	Private Sub clearButton_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ClearToolStripMenuItem.Click
 		SyncLock world.Entities
 			world.Entities.Clear()
 		End SyncLock
@@ -165,6 +173,9 @@ Public Class MainForm
 
 	Private Sub MainForm_MouseDown(ByVal sender As Object, ByVal e As MouseEventArgs) Handles MyBase.MouseDown
 		If e.Button = Windows.Forms.MouseButtons.Middle Then mouseDrag1 = e.Location
+		If e.Button = Windows.Forms.MouseButtons.Right Then
+			ActivateTool(selectTool)
+		End If
 		Return
 		If player.IsColliding Then
 			If e.Button = MouseButtons.Left Then
@@ -188,11 +199,11 @@ Public Class MainForm
 		If currentTool IsNot Nothing Then currentTool.Activate(Me)
 	End Sub
 
-	Private Sub createButton_Click(ByVal sender As Object, ByVal e As EventArgs) Handles createButton.Click
+	Private Sub createButton_Click(ByVal sender As Object, ByVal e As EventArgs) Handles CreateToolStripMenuItem.Click
 		ActivateTool(createTool)
 	End Sub
 
-	Private Sub selectButton_Click(ByVal sender As Object, ByVal e As EventArgs) Handles selectButton.Click
+	Private Sub selectButton_Click(ByVal sender As Object, ByVal e As EventArgs)
 		ActivateTool(selectTool)
 	End Sub
 
@@ -242,25 +253,36 @@ Public Class MainForm
 		PropertiesForm.Reload()
 	End Sub
 
-	Private Sub moveButton_Click(ByVal sender As Object, ByVal e As EventArgs) Handles moveButton.Click
+	Private Sub moveButton_Click(ByVal sender As Object, ByVal e As EventArgs) Handles MoveToolStripMenuItem.Click
 		ActivateTool(moveTool)
 	End Sub
 
-	Private Sub resizeButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles resizeButton.Click
+	Private Sub resizeButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ResizeToolStripMenuItem.Click
 		ActivateTool(resizeTool)
 	End Sub
 
-	Private Sub MainForm_KeyDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles MyBase.KeyDown
-		If e.KeyCode <> Keys.Delete Then Return
-		SyncLock world.Entities
-			For Each i As Entity In selectTool.selection
-				world.Entities.Remove(i)
-			Next
-		End SyncLock
-		selectTool.selection.Clear()
-	End Sub
+	Protected Overrides Function ProcessCmdKey(ByRef msg As System.Windows.Forms.Message, ByVal keyData As System.Windows.Forms.Keys) As Boolean
+		Select Case keyData
+			Case Keys.Delete
+				SyncLock world.Entities
+					For Each i As Entity In selectTool.selection
+						world.Entities.Remove(i)
+					Next
+				End SyncLock
+				selectTool.selection.Clear()
+			Case Keys.M
+				moveButton_Click(Nothing, Nothing)
+			Case Keys.C
+				createButton_Click(Nothing, Nothing)
+			Case Keys.R
+				resizeButton_Click(Nothing, Nothing)
+			Case Keys.F5
+				startButton_Click(Nothing, Nothing)
+		End Select
+		Return MyBase.ProcessCmdKey(msg, keyData)
+	End Function
 
-	Private Sub loadButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles loadButton.Click
+	Private Sub loadButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles LoadToolStripMenuItem.Click
 		Dim diag As New OpenFileDialog()
 		diag.InitialDirectory = My.Application.Info.DirectoryPath
 		diag.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*"
@@ -270,7 +292,7 @@ Public Class MainForm
 		LoadLevel(fileName)
 	End Sub
 
-	Private Sub saveButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles saveButton.Click
+	Private Sub saveButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SaveToolStripMenuItem.Click
 		Dim diag As New SaveFileDialog()
 		diag.InitialDirectory = My.Application.Info.DirectoryPath
 		diag.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*"

@@ -30,11 +30,14 @@ Public Class Entity
 		attr1 = xml.Attributes("image")
 		attr2 = xml.Attributes("brush")
 		If attr1 IsNot Nothing Then
-			Bitmap = New Bitmap(attr1.Value)
+			ImageFile = attr1.Value
+			Bitmap = New Bitmap(ImageFile)
 		ElseIf attr2 IsNot Nothing Then
-			Brush = New TextureBrush(New Bitmap(attr2.Value))
+			ImageFile = attr2.Value
+			Brush = New TextureBrush(New Bitmap(ImageFile))
 		Else
-			Color = Color.Blue
+			attr1 = xml.Attributes("color")
+			If attr1 IsNot Nothing Then Color = Color.FromArgb(Convert.ToInt32(attr1.Value, 16)) Else Color = Drawing.Color.Blue
 		End If
 		attr1 = xml.Attributes("name")
 		If attr1 IsNot Nothing Then Name = attr1.Value
@@ -129,7 +132,7 @@ Public Class Entity
 		& " solid=""" & IsSolid.ToString() & """" _
 		& " rest=""" & Restitution.ToString() & """" _
 		& " zorder=""" & ZOrder.ToString() & """" _
-		& If(Bitmap IsNot Nothing, " image=""" & ImageFile & """", If(Brush IsNot Nothing, " brush=""" & ImageFile & """", "")) _
+		& If(Bitmap IsNot Nothing, " image=""" & ImageFile & """", If(Brush IsNot Nothing, " brush=""" & ImageFile & """", " color=""" & Convert.ToString(Color.ToArgb(), 16) & """")) _
 		& "/>"
 	End Function
 End Class

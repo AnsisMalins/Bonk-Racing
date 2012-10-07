@@ -96,10 +96,14 @@ Public Structure Vector
 	End Operator
 
 	Public Overrides Function ToString() As String
-		Return "x=""" & pX.ToString() & """ y=""" & pY.ToString() & """"
+		Return pX.ToString() & ", " & pY.ToString()
 	End Function
 
 	Public Function GetLength() As Single
 		Return CSng(Math.Sqrt(Math.Pow(pX, 2) + Math.Pow(pY, 2)))
+	End Function
+
+	Public Function GetNormal() As Vector
+		Return Me / GetLength()
 	End Function
 End Structure

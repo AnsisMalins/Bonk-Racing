@@ -44,6 +44,7 @@ Public Class CreateTool
 
 	Private mouse1 As Vector
 	Private mdown As Boolean
+	Private rnd As New Random()
 
 	Public Overrides Sub MouseDown(ByVal sender As Object, ByVal e As MouseEventArgs)
 		If Control.MouseButtons <> MouseButtons.Left Then Return
@@ -55,7 +56,7 @@ Public Class CreateTool
 		Dim mouse2 As Vector = Form.camera.VectorToWorld(e.Location)
 		Dim topLeft As New Vector(Math.Min(mouse1.X, mouse2.X), Math.Min(mouse1.Y, mouse2.Y))
 		Dim downRight As New Vector(Math.Max(mouse1.X, mouse2.X), Math.Max(mouse1.Y, mouse2.Y))
-		Dim entity As New Entity(New Rectangle(topLeft, downRight - topLeft), Color.Blue)
+		Dim entity As New Entity(New Rectangle(topLeft, downRight - topLeft), Color.FromArgb(rnd.Next(255), rnd.Next(255), rnd.Next(255)))
 		SyncLock Form.world.Entities
 			Form.world.Entities.Add(entity)
 		End SyncLock
@@ -67,7 +68,9 @@ Public Class CreateTool
 		Dim mouse2 As Vector = Form.camera.VectorToWorld(Form.PointToClient(Control.MousePosition))
 		Dim topLeft As New Vector(Math.Min(mouse1.X, mouse2.X), Math.Min(mouse1.Y, mouse2.Y))
 		Dim downRight As New Vector(Math.Max(mouse1.X, mouse2.X), Math.Max(mouse1.Y, mouse2.Y))
-		e.Graphics.DrawRectangle(Pens.Green, New Rectangle(topLeft, downRight - topLeft))
+		Dim rect As New Rectangle(topLeft, downRight - topLeft)
+		e.Graphics.DrawRectangle(Pens.Green, rect)
+		e.Graphics.DrawString(New Vector(rect.Size).ToString(), Form.Font, Brushes.Black, mouse2 + New Vector(16, 16))
 	End Sub
 End Class
 
@@ -85,14 +88,16 @@ Public Class SelectTool
 	End Sub
 
 	Public Overrides Sub MouseUp(ByVal sender As Object, ByVal e As MouseEventArgs)
-		If Not My.Computer.Keyboard.ShiftKeyDown Then selection.Clear()
+		If Not My.Computer.Keyboard.ShiftKeyDown AndAlso Not My.Computer.Keyboard.CtrlKeyDown Then selection.Clear()
 		Dim mouse2 As Vector = Form.camera.VectorToWorld(e.Location)
 		Dim topLeft As New Vector(Math.Min(mouse1.X, mouse2.X), Math.Min(mouse1.Y, mouse2.Y))
 		Dim downRight As New Vector(Math.Max(mouse1.X, mouse2.X), Math.Max(mouse1.Y, mouse2.Y))
 		SyncLock Form.world.Entities
 			For Each i As Entity In Form.world.Entities
-				If RectangleF.Intersect(New RectangleF(topLeft, downRight - topLeft), i.Rectangle) <> RectangleF.Empty Then
-					selection.Add(i)
+				Dim selectRect As New RectangleF(topLeft, downRight - topLeft)
+				If RectangleF.Intersect(selectRect, i.Rectangle) <> RectangleF.Empty Then
+					If My.Computer.Keyboard.CtrlKeyDown Then selection.Remove(i) Else selection.Add(i)
+					If selectRect.Size = Size.Empty Then Exit For
 				End If
 			Next
 		End SyncLock
@@ -139,6 +144,12 @@ Public Class MoveTool
 
 	Public Overrides Sub MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs)
 		mdown = False
+	End Sub
+
+	Public Overrides Sub Paint(ByVal sender As Object, ByVal e As System.Windows.Forms.PaintEventArgs)
+		If Not mdown OrElse Form.selectTool.selection.Count = 0 Then Return
+		Dim entity As Entity = Form.selectTool.selection(0)
+		e.Graphics.DrawString(entity.Location.ToString(), Form.Font, Brushes.Black, mouse1 + New Vector(16, 16))
 	End Sub
 End Class
 
@@ -203,5 +214,7 @@ Public Class ResizeTool
 		If Form.selectTool.selection.Count = 0 Then Return
 		Dim entity As Entity = Form.selectTool.selection(0)
 		e.Graphics.DrawRectangle(Pens.Red, Rectangle.Round(entity.Rectangle))
+		If Not mdown Then Return
+		e.Graphics.DrawString(entity.Location.ToString(), Form.Font, Brushes.Black, mouse1 + New Vector(16, 16))
 	End Sub
 End Class
