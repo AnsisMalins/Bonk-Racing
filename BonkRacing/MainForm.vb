@@ -20,9 +20,9 @@ Public Class MainForm
 				If direction <> 1 Then player.Bitmap.RotateFlip(RotateFlipType.RotateNoneFlipX)
 				direction = 1
 			Case Keys.Up
-				If player.IsColliding Then player.Velocity += New Vector(1 * direction * jx, -2 * jy)
+				If player.IsColliding Then player.Velocity += New Vector(1 * direction * jx, -1.6 * jy)
 			Case Keys.Down
-				If player.IsColliding Then player.Velocity += New Vector(2 * direction * jx, -1 * jy)
+				If player.IsColliding Then player.Velocity += New Vector(2 * direction * jx, -0.5 * jy)
 		End Select
 	End Sub
 
