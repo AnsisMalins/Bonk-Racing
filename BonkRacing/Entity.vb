@@ -183,9 +183,11 @@ Public Class PinkiePie
 	Inherits Actor
 
 	Private touchingGound As Boolean
+	Private caughtPlayer As Boolean
 
 	Public Overrides Sub CollideCallback(ByVal entity As Entity, ByVal other As Entity, ByVal side As Integer)
 		If side = 3 AndAlso other.Name = "ground" Then touchingGound = True
+		If other.Name = "player" Then caughtPlayer = True
 	End Sub
 
 	Public Overrides Sub RenderCallback(ByVal entity As Entity, ByVal mainForm As MainForm)
@@ -193,5 +195,6 @@ Public Class PinkiePie
 			entity.Velocity += New Vector(1.5 * mainForm.jx, -1.5 * mainForm.jy) ' Bounce! Whee!
 			touchingGound = False
 		End If
+		If caughtPlayer Then mainForm.GameLose()
 	End Sub
 End Class

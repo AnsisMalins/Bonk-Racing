@@ -3,11 +3,22 @@ Option Infer Off
 Option Strict On
 Imports System.IO
 Imports System.Xml
+Imports Microsoft.VisualBasic
 
 Public Class MainForm
 
 	Public Shared ReadOnly jx As Single = 0.1
 	Public Shared ReadOnly jy As Single = 0.3
+	Private gameLost As Boolean
+	Private gameWon As Boolean
+
+	Public Sub GameLose()
+		gameLost = True
+	End Sub
+
+	Public Sub GameWin()
+		gameWon = True
+	End Sub
 
 	Private direction As Integer = 1
 	Private Sub PlayerControl(ByVal keyData As Keys)
@@ -20,9 +31,16 @@ Public Class MainForm
 				If direction <> 1 Then player.Bitmap.RotateFlip(RotateFlipType.RotateNoneFlipX)
 				direction = 1
 			Case Keys.Up
-				If player.IsColliding Then player.Velocity += New Vector(1 * direction * jx, -1.6 * jy)
+				If player.IsColliding Then
+					player.Velocity += New Vector(1 * direction * jx, -1.6 * jy)
+				End If
 			Case Keys.Down
-				If player.IsColliding Then player.Velocity += New Vector(2 * direction * jx, -0.5 * jy)
+				If player.IsColliding Then
+					player.Velocity += New Vector(2 * direction * jx, -0.5 * jy)
+				End If
+			Case Keys.Escape
+				world.Stop()
+				mainMenu.Visible = True
 		End Select
 	End Sub
 
@@ -117,6 +135,10 @@ Public Class MainForm
 		ClientSize = resolution
 		camera = New Camera(resolution, Vector.Zero)
 		world = New World()
+		If Not Debugger.IsAttached Then
+			mainMenu.Dock = DockStyle.Fill
+			mainMenu.Visible = True
+		End If
 	End Sub
 
 	Protected Overrides Sub OnPaint(ByVal e As PaintEventArgs)
@@ -147,6 +169,9 @@ Public Class MainForm
 				End Using
 			End If
 			i.IsColliding = False
+			If i Is player AndAlso i.Location.Y > 500 Then
+				gameWon = True
+			End If
 		Next
 
 		If Debugger.IsAttached Then
@@ -165,11 +190,25 @@ Public Class MainForm
 
 		e.Graphics.TranslateTransform(-camera.X, -camera.Y)
 
-		e.Graphics.DrawString( _
+		If Debugger.IsAttached Then e.Graphics.DrawString( _
 		"Physics: " & If(world.IsRunning, world.FramesPerSecond & " fps", "stopped") & Environment.NewLine _
 		& "Rendering: " & FramesPerSecond & " fps" & Environment.NewLine _
 		& "Camera: " & camera.Location.ToString() & Environment.NewLine _
 		& "Cursor: " & mouse.ToString(), Font, Brushes.Black, 6, 6)
+
+		If gameWon Then
+			Using f As New StringFormat()
+				f.Alignment = StringAlignment.Center
+				f.LineAlignment = StringAlignment.Center
+				e.Graphics.DrawString("WIN" & Environment.NewLine & "press Esc to play again", mainMenu.Font, Brushes.Green, ClientRectangle, f)
+			End Using
+		ElseIf gameLost Then
+			Using f As New StringFormat()
+				f.Alignment = StringAlignment.Center
+				f.LineAlignment = StringAlignment.Center
+				e.Graphics.DrawString("FAIL" & Environment.NewLine & "press Esc to retry", mainMenu.Font, Brushes.Red, ClientRectangle, f)
+			End Using
+		End If
 
 		If nowTicks - prevSecond > 10000000 Then
 			FramesPerSecond = fpsTemp
@@ -352,5 +391,15 @@ Public Class MainForm
 
 	Private Sub ToolStripMenuItem3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItem3.Click
 		ActivateTool(textureTool)
+	End Sub
+
+	Private Sub gameButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles gameButton.Click
+		startButton.Visible = False
+		editButton.Visible = False
+		gameWon = False
+		gameLost = False
+		mainMenu.Visible = False
+		LoadLevel("level.xml")
+		world.Start()
 	End Sub
 End Class

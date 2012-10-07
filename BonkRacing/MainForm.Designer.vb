@@ -32,13 +32,16 @@ Partial Class MainForm
 		Me.CreateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.MoveToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.ResizeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
+		Me.ToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem
 		Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripSeparator
 		Me.LoadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.SaveToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.ClearToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.editButton = New System.Windows.Forms.Button
-		Me.ToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem
+		Me.mainMenu = New System.Windows.Forms.Panel
+		Me.gameButton = New System.Windows.Forms.Button
 		Me.ContextMenuStrip1.SuspendLayout()
+		Me.mainMenu.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'renderTimer
@@ -58,65 +61,71 @@ Partial Class MainForm
 		'
 		Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImageToolStripMenuItem, Me.BrushToolStripMenuItem, Me.PropertiesToolStripMenuItem, Me.CreateToolStripMenuItem, Me.MoveToolStripMenuItem, Me.ResizeToolStripMenuItem, Me.ToolStripMenuItem3, Me.ToolStripMenuItem2, Me.LoadToolStripMenuItem, Me.SaveToolStripMenuItem, Me.ClearToolStripMenuItem})
 		Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-		Me.ContextMenuStrip1.Size = New System.Drawing.Size(153, 252)
+		Me.ContextMenuStrip1.Size = New System.Drawing.Size(148, 230)
 		'
 		'ImageToolStripMenuItem
 		'
 		Me.ImageToolStripMenuItem.Name = "ImageToolStripMenuItem"
-		Me.ImageToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.ImageToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
 		Me.ImageToolStripMenuItem.Text = "Image..."
 		'
 		'BrushToolStripMenuItem
 		'
 		Me.BrushToolStripMenuItem.Name = "BrushToolStripMenuItem"
-		Me.BrushToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.BrushToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
 		Me.BrushToolStripMenuItem.Text = "Brush..."
 		'
 		'PropertiesToolStripMenuItem
 		'
 		Me.PropertiesToolStripMenuItem.Name = "PropertiesToolStripMenuItem"
-		Me.PropertiesToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.PropertiesToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
 		Me.PropertiesToolStripMenuItem.Text = "Properties..."
 		'
 		'CreateToolStripMenuItem
 		'
 		Me.CreateToolStripMenuItem.Name = "CreateToolStripMenuItem"
-		Me.CreateToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.CreateToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
 		Me.CreateToolStripMenuItem.Text = "Create"
 		'
 		'MoveToolStripMenuItem
 		'
 		Me.MoveToolStripMenuItem.Name = "MoveToolStripMenuItem"
-		Me.MoveToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.MoveToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
 		Me.MoveToolStripMenuItem.Text = "Move"
 		'
 		'ResizeToolStripMenuItem
 		'
 		Me.ResizeToolStripMenuItem.Name = "ResizeToolStripMenuItem"
-		Me.ResizeToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.ResizeToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
 		Me.ResizeToolStripMenuItem.Text = "Resize"
+		'
+		'ToolStripMenuItem3
+		'
+		Me.ToolStripMenuItem3.Name = "ToolStripMenuItem3"
+		Me.ToolStripMenuItem3.Size = New System.Drawing.Size(147, 22)
+		Me.ToolStripMenuItem3.Text = "Adjust texture"
 		'
 		'ToolStripMenuItem2
 		'
 		Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-		Me.ToolStripMenuItem2.Size = New System.Drawing.Size(149, 6)
+		Me.ToolStripMenuItem2.Size = New System.Drawing.Size(144, 6)
 		'
 		'LoadToolStripMenuItem
 		'
 		Me.LoadToolStripMenuItem.Name = "LoadToolStripMenuItem"
-		Me.LoadToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.LoadToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
 		Me.LoadToolStripMenuItem.Text = "Load..."
 		'
 		'SaveToolStripMenuItem
 		'
 		Me.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem"
-		Me.SaveToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.SaveToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
 		Me.SaveToolStripMenuItem.Text = "Save..."
 		'
 		'ClearToolStripMenuItem
 		'
 		Me.ClearToolStripMenuItem.Name = "ClearToolStripMenuItem"
-		Me.ClearToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.ClearToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
 		Me.ClearToolStripMenuItem.Text = "Clear..."
 		'
 		'editButton
@@ -128,17 +137,33 @@ Partial Class MainForm
 		Me.editButton.TabIndex = 0
 		Me.editButton.Text = "Edit"
 		'
-		'ToolStripMenuItem3
+		'mainMenu
 		'
-		Me.ToolStripMenuItem3.Name = "ToolStripMenuItem3"
-		Me.ToolStripMenuItem3.Size = New System.Drawing.Size(152, 22)
-		Me.ToolStripMenuItem3.Text = "Adjust texture"
+		Me.mainMenu.BackgroundImage = Global.BonkRacing.My.Resources.Resources.card1
+		Me.mainMenu.Controls.Add(Me.gameButton)
+		Me.mainMenu.Font = New System.Drawing.Font("Impact", 36.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.mainMenu.Location = New System.Drawing.Point(0, 0)
+		Me.mainMenu.Name = "mainMenu"
+		Me.mainMenu.Size = New System.Drawing.Size(200, 100)
+		Me.mainMenu.TabIndex = 1
+		Me.mainMenu.Visible = False
+		'
+		'gameButton
+		'
+		Me.gameButton.Font = New System.Drawing.Font("Impact", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.gameButton.Location = New System.Drawing.Point(481, 315)
+		Me.gameButton.Name = "gameButton"
+		Me.gameButton.Size = New System.Drawing.Size(332, 169)
+		Me.gameButton.TabIndex = 0
+		Me.gameButton.Text = "Run, baby Discord, run!"
+		Me.gameButton.UseVisualStyleBackColor = True
 		'
 		'MainForm
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.ClientSize = New System.Drawing.Size(1024, 600)
+		Me.Controls.Add(Me.mainMenu)
 		Me.Controls.Add(Me.startButton)
 		Me.Controls.Add(Me.editButton)
 		Me.DoubleBuffered = True
@@ -147,6 +172,7 @@ Partial Class MainForm
 		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "Bonk Racing"
 		Me.ContextMenuStrip1.ResumeLayout(False)
+		Me.mainMenu.ResumeLayout(False)
 		Me.ResumeLayout(False)
 
 	End Sub
@@ -165,5 +191,7 @@ Partial Class MainForm
 	Friend WithEvents SaveToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents ClearToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents ToolStripMenuItem3 As System.Windows.Forms.ToolStripMenuItem
+	Private WithEvents mainMenu As System.Windows.Forms.Panel
+	Friend WithEvents gameButton As System.Windows.Forms.Button
 
 End Class
