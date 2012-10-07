@@ -110,35 +110,35 @@ Partial Class PropertiesForm
 		Me.y.Location = New System.Drawing.Point(75, 64)
 		Me.y.Name = "y"
 		Me.y.Size = New System.Drawing.Size(97, 20)
-		Me.y.TabIndex = 1
+		Me.y.TabIndex = 2
 		'
 		'width
 		'
 		Me.width.Location = New System.Drawing.Point(75, 90)
 		Me.width.Name = "width"
 		Me.width.Size = New System.Drawing.Size(97, 20)
-		Me.width.TabIndex = 1
+		Me.width.TabIndex = 3
 		'
 		'height
 		'
 		Me.height.Location = New System.Drawing.Point(75, 116)
 		Me.height.Name = "height"
 		Me.height.Size = New System.Drawing.Size(97, 20)
-		Me.height.TabIndex = 1
+		Me.height.TabIndex = 4
 		'
 		'mass
 		'
 		Me.mass.Location = New System.Drawing.Point(75, 142)
 		Me.mass.Name = "mass"
 		Me.mass.Size = New System.Drawing.Size(97, 20)
-		Me.mass.TabIndex = 1
+		Me.mass.TabIndex = 5
 		'
 		'restitution
 		'
 		Me.restitution.Location = New System.Drawing.Point(75, 168)
 		Me.restitution.Name = "restitution"
 		Me.restitution.Size = New System.Drawing.Size(97, 20)
-		Me.restitution.TabIndex = 1
+		Me.restitution.TabIndex = 6
 		'
 		'locked
 		'
@@ -146,7 +146,7 @@ Partial Class PropertiesForm
 		Me.locked.Location = New System.Drawing.Point(75, 220)
 		Me.locked.Name = "locked"
 		Me.locked.Size = New System.Drawing.Size(62, 17)
-		Me.locked.TabIndex = 2
+		Me.locked.TabIndex = 8
 		Me.locked.Text = "Locked"
 		Me.locked.UseVisualStyleBackColor = True
 		'
@@ -156,7 +156,7 @@ Partial Class PropertiesForm
 		Me.solid.Location = New System.Drawing.Point(75, 243)
 		Me.solid.Name = "solid"
 		Me.solid.Size = New System.Drawing.Size(49, 17)
-		Me.solid.TabIndex = 2
+		Me.solid.TabIndex = 9
 		Me.solid.Text = "Solid"
 		Me.solid.UseVisualStyleBackColor = True
 		'
@@ -165,8 +165,8 @@ Partial Class PropertiesForm
 		Me.Button1.Location = New System.Drawing.Point(97, 271)
 		Me.Button1.Name = "Button1"
 		Me.Button1.Size = New System.Drawing.Size(75, 23)
-		Me.Button1.TabIndex = 3
-		Me.Button1.Text = "Apply"
+		Me.Button1.TabIndex = 10
+		Me.Button1.Text = "&Apply"
 		Me.Button1.UseVisualStyleBackColor = True
 		'
 		'reloadButton
@@ -174,8 +174,8 @@ Partial Class PropertiesForm
 		Me.reloadButton.Location = New System.Drawing.Point(16, 271)
 		Me.reloadButton.Name = "reloadButton"
 		Me.reloadButton.Size = New System.Drawing.Size(75, 23)
-		Me.reloadButton.TabIndex = 4
-		Me.reloadButton.Text = "Reload"
+		Me.reloadButton.TabIndex = 11
+		Me.reloadButton.Text = "&Reload"
 		Me.reloadButton.UseVisualStyleBackColor = True
 		'
 		'zorder
@@ -183,7 +183,7 @@ Partial Class PropertiesForm
 		Me.zorder.Location = New System.Drawing.Point(75, 194)
 		Me.zorder.Name = "zorder"
 		Me.zorder.Size = New System.Drawing.Size(97, 20)
-		Me.zorder.TabIndex = 1
+		Me.zorder.TabIndex = 7
 		'
 		'Label7
 		'
@@ -199,7 +199,7 @@ Partial Class PropertiesForm
 		Me.tname.Location = New System.Drawing.Point(75, 12)
 		Me.tname.Name = "tname"
 		Me.tname.Size = New System.Drawing.Size(97, 20)
-		Me.tname.TabIndex = 1
+		Me.tname.TabIndex = 0
 		'
 		'Label8
 		'
@@ -237,6 +237,7 @@ Partial Class PropertiesForm
 		Me.Controls.Add(Me.Label1)
 		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
 		Me.Name = "PropertiesForm"
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
 		Me.Text = "Properties"
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
@@ -256,10 +257,10 @@ Partial Class PropertiesForm
 	Friend WithEvents restitution As System.Windows.Forms.TextBox
 	Friend WithEvents locked As System.Windows.Forms.CheckBox
 	Friend WithEvents solid As System.Windows.Forms.CheckBox
-	Friend WithEvents Button1 As System.Windows.Forms.Button
 	Friend WithEvents reloadButton As System.Windows.Forms.Button
 	Friend WithEvents zorder As System.Windows.Forms.TextBox
 	Friend WithEvents Label7 As System.Windows.Forms.Label
 	Friend WithEvents tname As System.Windows.Forms.TextBox
 	Friend WithEvents Label8 As System.Windows.Forms.Label
+	Private WithEvents Button1 As System.Windows.Forms.Button
 End Class

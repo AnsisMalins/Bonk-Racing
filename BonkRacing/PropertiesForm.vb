@@ -44,8 +44,11 @@
 			If locked.Tag IsNot Nothing Then i.IsLocked = locked.Checked
 			If solid.Tag IsNot Nothing Then i.IsSolid = solid.Checked
 			If zorder.Tag IsNot Nothing Then i.ZOrder = Integer.Parse(zorder.Text)
-			If tname.Tag IsNot Nothing Then i.Name = tname.Text
-			If i.Name = "player" Then mainForm.player = i
+			If tname.Tag IsNot Nothing Then
+				If i.Name = "player" AndAlso tname.Text <> "player" Then mainForm.player = Nothing
+				i.Name = tname.Text
+			End If
+			mainForm.AssignActor(i)
 		Next
 		ClearTags()
 	End Sub

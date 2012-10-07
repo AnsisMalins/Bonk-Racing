@@ -37,6 +37,7 @@ Partial Class MainForm
 		Me.SaveToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.ClearToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
 		Me.editButton = New System.Windows.Forms.Button
+		Me.ToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem
 		Me.ContextMenuStrip1.SuspendLayout()
 		Me.SuspendLayout()
 		'
@@ -55,67 +56,67 @@ Partial Class MainForm
 		'
 		'ContextMenuStrip1
 		'
-		Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImageToolStripMenuItem, Me.BrushToolStripMenuItem, Me.PropertiesToolStripMenuItem, Me.CreateToolStripMenuItem, Me.MoveToolStripMenuItem, Me.ResizeToolStripMenuItem, Me.ToolStripMenuItem2, Me.LoadToolStripMenuItem, Me.SaveToolStripMenuItem, Me.ClearToolStripMenuItem})
+		Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ImageToolStripMenuItem, Me.BrushToolStripMenuItem, Me.PropertiesToolStripMenuItem, Me.CreateToolStripMenuItem, Me.MoveToolStripMenuItem, Me.ResizeToolStripMenuItem, Me.ToolStripMenuItem3, Me.ToolStripMenuItem2, Me.LoadToolStripMenuItem, Me.SaveToolStripMenuItem, Me.ClearToolStripMenuItem})
 		Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-		Me.ContextMenuStrip1.Size = New System.Drawing.Size(137, 208)
+		Me.ContextMenuStrip1.Size = New System.Drawing.Size(153, 252)
 		'
 		'ImageToolStripMenuItem
 		'
 		Me.ImageToolStripMenuItem.Name = "ImageToolStripMenuItem"
-		Me.ImageToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
+		Me.ImageToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
 		Me.ImageToolStripMenuItem.Text = "Image..."
 		'
 		'BrushToolStripMenuItem
 		'
 		Me.BrushToolStripMenuItem.Name = "BrushToolStripMenuItem"
-		Me.BrushToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
+		Me.BrushToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
 		Me.BrushToolStripMenuItem.Text = "Brush..."
 		'
 		'PropertiesToolStripMenuItem
 		'
 		Me.PropertiesToolStripMenuItem.Name = "PropertiesToolStripMenuItem"
-		Me.PropertiesToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
+		Me.PropertiesToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
 		Me.PropertiesToolStripMenuItem.Text = "Properties..."
 		'
 		'CreateToolStripMenuItem
 		'
 		Me.CreateToolStripMenuItem.Name = "CreateToolStripMenuItem"
-		Me.CreateToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
+		Me.CreateToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
 		Me.CreateToolStripMenuItem.Text = "Create"
 		'
 		'MoveToolStripMenuItem
 		'
 		Me.MoveToolStripMenuItem.Name = "MoveToolStripMenuItem"
-		Me.MoveToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
+		Me.MoveToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
 		Me.MoveToolStripMenuItem.Text = "Move"
 		'
 		'ResizeToolStripMenuItem
 		'
 		Me.ResizeToolStripMenuItem.Name = "ResizeToolStripMenuItem"
-		Me.ResizeToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
+		Me.ResizeToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
 		Me.ResizeToolStripMenuItem.Text = "Resize"
 		'
 		'ToolStripMenuItem2
 		'
 		Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-		Me.ToolStripMenuItem2.Size = New System.Drawing.Size(133, 6)
+		Me.ToolStripMenuItem2.Size = New System.Drawing.Size(149, 6)
 		'
 		'LoadToolStripMenuItem
 		'
 		Me.LoadToolStripMenuItem.Name = "LoadToolStripMenuItem"
-		Me.LoadToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
+		Me.LoadToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
 		Me.LoadToolStripMenuItem.Text = "Load..."
 		'
 		'SaveToolStripMenuItem
 		'
 		Me.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem"
-		Me.SaveToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
+		Me.SaveToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
 		Me.SaveToolStripMenuItem.Text = "Save..."
 		'
 		'ClearToolStripMenuItem
 		'
 		Me.ClearToolStripMenuItem.Name = "ClearToolStripMenuItem"
-		Me.ClearToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
+		Me.ClearToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
 		Me.ClearToolStripMenuItem.Text = "Clear..."
 		'
 		'editButton
@@ -126,6 +127,12 @@ Partial Class MainForm
 		Me.editButton.Size = New System.Drawing.Size(75, 23)
 		Me.editButton.TabIndex = 0
 		Me.editButton.Text = "Edit"
+		'
+		'ToolStripMenuItem3
+		'
+		Me.ToolStripMenuItem3.Name = "ToolStripMenuItem3"
+		Me.ToolStripMenuItem3.Size = New System.Drawing.Size(152, 22)
+		Me.ToolStripMenuItem3.Text = "Adjust texture"
 		'
 		'MainForm
 		'
@@ -157,5 +164,6 @@ Partial Class MainForm
 	Friend WithEvents LoadToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents SaveToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents ClearToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents ToolStripMenuItem3 As System.Windows.Forms.ToolStripMenuItem
 
 End Class

@@ -218,3 +218,39 @@ Public Class ResizeTool
 		e.Graphics.DrawString(entity.Size.ToString(), Form.Font, Brushes.Black, mouse1 + New Vector(16, 16))
 	End Sub
 End Class
+
+Public Class TextureTool
+	Inherits BaseTool
+
+	Private mdown As Boolean
+	Private mouse1 As Vector
+
+	Public Overrides Sub MouseDown(ByVal sender As Object, ByVal e As MouseEventArgs)
+		If e.Button <> MouseButtons.Left Then Return
+		mdown = True
+		mouse1 = Form.camera.VectorToWorld(e.Location)
+	End Sub
+
+	Public Overrides Sub MouseMove(ByVal sender As Object, ByVal e As MouseEventArgs)
+		If Not mdown Then Return
+		Dim mouse2 As Vector = Form.camera.VectorToWorld(e.Location)
+		For Each i As Entity In Form.selectTool.selection
+			If i.Brush IsNot Nothing Then
+				i.Brush.TranslateTransform(-i.TextureOffset.X, -i.TextureOffset.Y)
+				i.TextureOffset += mouse2 - mouse1
+				i.Brush.TranslateTransform(i.TextureOffset.X, i.TextureOffset.Y)
+			End If
+		Next
+		mouse1 = mouse2
+	End Sub
+
+	Public Overrides Sub MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs)
+		mdown = False
+	End Sub
+
+	Public Overrides Sub Paint(ByVal sender As Object, ByVal e As System.Windows.Forms.PaintEventArgs)
+		If Not mdown OrElse Form.selectTool.selection.Count = 0 Then Return
+		Dim entity As Entity = Form.selectTool.selection(0)
+		e.Graphics.DrawString(entity.Location.ToString(), Form.Font, Brushes.Black, mouse1 + New Vector(16, 16))
+	End Sub
+End Class

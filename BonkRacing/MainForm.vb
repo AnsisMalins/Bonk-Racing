@@ -23,6 +23,17 @@ Public Class MainForm
 		End Select
 	End Sub
 
+	Public Sub AssignActor(ByVal entity As Entity)
+		Select Case entity.Name
+			Case "player"
+				player = entity
+			Case "pinkie"
+				entity.Actor = New PinkiePie()
+			Case Else
+				entity.Actor = Nothing
+		End Select
+	End Sub
+
 	Private Sub LoadLevel(ByVal fileName As String)
 		Dim xml As New XmlDocument()
 		xml.Load(fileName)
@@ -40,7 +51,7 @@ Public Class MainForm
 			For Each i As XmlNode In xml.SelectNodes("//entity")
 				Dim entity As New Entity(i)
 				world.Entities.Add(entity)
-				If entity.Name = "player" Then player = entity
+				AssignActor(entity)
 			Next
 		End SyncLock
 		Dim cameraNode As XmlNode = xml.SelectSingleNode("//camera")
@@ -78,6 +89,7 @@ Public Class MainForm
 		End Using
 	End Sub
 
+	Private textureTool As New TextureTool()
 	Private resizeTool As New ResizeTool()
 	Private moveTool As New MoveTool()
 	Private currentTool As BaseTool
@@ -121,6 +133,7 @@ Public Class MainForm
 		Array.Sort(entities, Function(a As Entity, b As Entity) a.ZOrder - b.ZOrder)
 
 		For Each i As Entity In entities
+			i.RenderCallback(Me)
 			If i.Bitmap IsNot Nothing Then
 				e.Graphics.DrawImage(i.Bitmap, i.Rectangle)
 			ElseIf i.Brush IsNot Nothing Then
@@ -267,6 +280,7 @@ Public Class MainForm
 		If selectTool.selection.Count = 0 Then Return
 		If Not PropertiesForm.Visible Then PropertiesForm.Show(Me)
 		PropertiesForm.Reload()
+		PropertiesForm.Focus()
 	End Sub
 
 	Private Sub moveButton_Click(ByVal sender As Object, ByVal e As EventArgs) Handles MoveToolStripMenuItem.Click
@@ -329,5 +343,9 @@ Public Class MainForm
 		Dim mouseDrag2 As Vector = e.Location
 		camera.Location -= mouseDrag2 - mouseDrag1
 		mouseDrag1 = mouseDrag2
+	End Sub
+
+	Private Sub ToolStripMenuItem3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItem3.Click
+		ActivateTool(textureTool)
 	End Sub
 End Class

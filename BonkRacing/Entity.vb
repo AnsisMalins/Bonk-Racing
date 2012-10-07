@@ -35,6 +35,10 @@ Public Class Entity
 		ElseIf attr2 IsNot Nothing Then
 			ImageFile = attr2.Value
 			Brush = New TextureBrush(New Bitmap(ImageFile))
+			attr1 = xml.Attributes("tx")
+			attr2 = xml.Attributes("ty")
+			If attr1 IsNot Nothing AndAlso attr2 IsNot Nothing Then TextureOffset = New Vector(Single.Parse(attr1.Value), Single.Parse(attr2.Value))
+			Brush.TranslateTransform(TextureOffset.X, TextureOffset.Y)
 		Else
 			attr1 = xml.Attributes("color")
 			If attr1 IsNot Nothing Then Color = Color.FromArgb(Convert.ToInt32(attr1.Value, 16)) Else Color = Drawing.Color.Blue
@@ -48,7 +52,7 @@ Public Class Entity
 		Me.Bitmap = bitmap
 	End Sub
 
-	Public Sub New(ByVal rectangle As RectangleF, ByVal brush As Brush)
+	Public Sub New(ByVal rectangle As RectangleF, ByVal brush As TextureBrush)
 		Initialize(rectangle)
 		Me.Brush = brush
 	End Sub
@@ -93,8 +97,9 @@ Public Class Entity
 	End Property
 
 	Public Bitmap As Bitmap
-	Public Brush As Brush
+	Public Brush As TextureBrush
 	Public Color As Color
+	Public TextureOffset As Vector
 
 	Public Location As Vector
 
@@ -133,6 +138,60 @@ Public Class Entity
 		& " rest=""" & Restitution.ToString() & """" _
 		& " zorder=""" & ZOrder.ToString() & """" _
 		& If(Bitmap IsNot Nothing, " image=""" & ImageFile & """", If(Brush IsNot Nothing, " brush=""" & ImageFile & """", " color=""" & Convert.ToString(Color.ToArgb(), 16) & """")) _
+		& If(Brush IsNot Nothing, " tx=""" & TextureOffset.X.ToString() & """ ty=""" & TextureOffset.Y.ToString() & """", "") _
 		& "/>"
 	End Function
+
+	Public SelfDestruct As Boolean
+
+	Public Overridable Sub PhysicsCallback(ByVal world As World)
+		If Actor IsNot Nothing Then Actor.PhysicsCallback(Me, world)
+	End Sub
+
+	Public Overridable Sub RenderCallback(ByVal mainForm As MainForm)
+		If Actor IsNot Nothing Then Actor.RenderCallback(Me, mainForm)
+	End Sub
+
+	Public Overridable Sub CollideCallback(ByVal other As Entity, ByVal side As Integer)
+		If Actor IsNot Nothing Then Actor.CollideCallback(Me, other, side)
+	End Sub
+
+	Public Actor As Actor
+
+	Public Shared Function Collides(ByVal i As Entity, ByVal j As Entity, ByVal world As World) As Boolean
+		Dim iRect As New RectangleF(i.Location + i.Velocity * world.Speed - i.Size / 2, i.Size)
+		Dim jRect As New RectangleF(j.Location + j.Velocity * world.Speed - j.Size / 2, j.Size)
+		Return RectangleF.Intersect(iRect, jRect) <> RectangleF.Empty
+	End Function
+
+	Public Rubbery As Boolean
+End Class
+
+Public Class Actor
+
+	Public Overridable Sub PhysicsCallback(ByVal entity As Entity, ByVal world As World)
+	End Sub
+
+	Public Overridable Sub RenderCallback(ByVal entity As Entity, ByVal mainForm As MainForm)
+	End Sub
+
+	Public Overridable Sub CollideCallback(ByVal entity As Entity, ByVal other As Entity, ByVal side As Integer)
+	End Sub
+End Class
+
+Public Class PinkiePie
+	Inherits Actor
+
+	Private touchingGound As Boolean
+
+	Public Overrides Sub CollideCallback(ByVal entity As Entity, ByVal other As Entity, ByVal side As Integer)
+		If side = 3 AndAlso other.Name = "ground" Then touchingGound = True
+	End Sub
+
+	Public Overrides Sub RenderCallback(ByVal entity As Entity, ByVal mainForm As MainForm)
+		If touchingGound Then
+			entity.Velocity += New Vector(0, -0.3) ' Bounce! Whee!
+			touchingGound = False
+		End If
+	End Sub
 End Class

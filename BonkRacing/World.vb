@@ -61,14 +61,14 @@ Public Class World
 				Dim nowTicks As Long = DateTime.Now.Ticks
 				fpsTemp += 1
 				SyncLock Entities
+					Entities.RemoveAll(Function(x) x.SelfDestruct)
 					For Each i As Entity In Entities
+						i.PhysicsCallback(Me)
 						If Not i.IsSolid Then Continue For
 						Dim iRect As New RectangleF(i.Location + i.Velocity * Speed - i.Size / 2, i.Size)
-						iRect.Inflate(0.01, 0.01)
 						For Each j As Entity In Entities
 							If i Is j OrElse i.IsLocked AndAlso j.IsLocked OrElse Not j.IsSolid Then Continue For
-							Dim jRect As RectangleF = j.Rectangle
-							jRect.Inflate(0.01, 0.01)
+							Dim jRect As New RectangleF(j.Location + j.Velocity * Speed - j.Size / 2, j.Size)
 							If RectangleF.Intersect(iRect, jRect) <> RectangleF.Empty Then
 								i.IsColliding = True
 								j.IsColliding = True
@@ -83,17 +83,32 @@ Public Class World
 									j.Velocity = jNewVelocity
 								End If
 								iRect = i.Rectangle	' Hack because we need current instead of predicted location.
+								jRect = j.Rectangle
+								Dim side As Integer = 0
 								If iRect.Right > jRect.Left AndAlso iRect.Left < jRect.Right _
 								OrElse jRect.Right > iRect.Left AndAlso jRect.Left < iRect.Right Then
-									i.Velocity = New Vector(-i.Velocity.X, i.Velocity.Y)
-									j.Velocity = New Vector(-j.Velocity.X, j.Velocity.Y)
+									side = If(i.Location.Y < j.Location.Y, 3, 1)
+									If Not i.Rubbery AndAlso Not j.Rubbery Then
+										i.Velocity = New Vector(-i.Velocity.X, i.Velocity.Y)
+										j.Velocity = New Vector(-j.Velocity.X, j.Velocity.Y)
+									End If
 								ElseIf iRect.Bottom > jRect.Top AndAlso iRect.Top < jRect.Bottom _
 								OrElse jRect.Bottom > iRect.Top AndAlso jRect.Top < iRect.Bottom Then
-									i.Velocity = New Vector(i.Velocity.X, -i.Velocity.Y)
-									j.Velocity = New Vector(j.Velocity.X, -j.Velocity.Y)
+									side = If(i.Location.X < j.Location.X, 2, 4)
+									If Not i.Rubbery AndAlso Not j.Rubbery Then
+										i.Velocity = New Vector(i.Velocity.X, -i.Velocity.Y)
+										j.Velocity = New Vector(j.Velocity.X, -j.Velocity.Y)
+									End If
 								End If
+								i.CollideCallback(j, side)
+								If side > 0 Then
+									side += 2
+									If side > 4 Then side -= 4
+								End If
+								j.CollideCallback(i, side)
 							End If
 						Next
+						If i.IsLocked Then i.Velocity = Vector.Zero
 						i.Location += i.Velocity * Speed
 						If Not i.IsLocked Then i.Velocity += Gravity
 					Next
