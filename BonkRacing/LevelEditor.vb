@@ -92,15 +92,18 @@ Public Class SelectTool
 		Dim mouse2 As Vector = Form.camera.VectorToWorld(e.Location)
 		Dim topLeft As New Vector(Math.Min(mouse1.X, mouse2.X), Math.Min(mouse1.Y, mouse2.Y))
 		Dim downRight As New Vector(Math.Max(mouse1.X, mouse2.X), Math.Max(mouse1.Y, mouse2.Y))
+		Dim entities As Entity()
 		SyncLock Form.world.Entities
-			For Each i As Entity In Form.world.Entities
-				Dim selectRect As New RectangleF(topLeft, downRight - topLeft)
-				If RectangleF.Intersect(selectRect, i.Rectangle) <> RectangleF.Empty Then
-					If My.Computer.Keyboard.CtrlKeyDown Then selection.Remove(i) Else selection.Add(i)
-					If selectRect.Size = Size.Empty Then Exit For
-				End If
-			Next
+			entities = Form.world.Entities.ToArray()
 		End SyncLock
+		Array.Sort(entities, Function(a As Entity, b As Entity) b.ZOrder - a.ZOrder)
+		For Each i As Entity In entities
+			Dim selectRect As New RectangleF(topLeft, downRight - topLeft)
+			If RectangleF.Intersect(selectRect, i.Rectangle) <> RectangleF.Empty Then
+				If My.Computer.Keyboard.CtrlKeyDown Then selection.Remove(i) Else selection.Add(i)
+				If selectRect.Size = Size.Empty Then Exit For
+			End If
+		Next
 		mdown = False
 		Form.PropertiesForm.Reload()
 	End Sub
@@ -251,6 +254,6 @@ Public Class TextureTool
 	Public Overrides Sub Paint(ByVal sender As Object, ByVal e As System.Windows.Forms.PaintEventArgs)
 		If Not mdown OrElse Form.selectTool.selection.Count = 0 Then Return
 		Dim entity As Entity = Form.selectTool.selection(0)
-		e.Graphics.DrawString(entity.Location.ToString(), Form.Font, Brushes.Black, mouse1 + New Vector(16, 16))
+		e.Graphics.DrawString(entity.TextureOffset.ToString(), Form.Font, Brushes.Black, mouse1 + New Vector(16, 16))
 	End Sub
 End Class

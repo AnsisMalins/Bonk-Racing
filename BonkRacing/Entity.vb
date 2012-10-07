@@ -190,7 +190,7 @@ Public Class PinkiePie
 
 	Public Overrides Sub RenderCallback(ByVal entity As Entity, ByVal mainForm As MainForm)
 		If touchingGound Then
-			entity.Velocity += New Vector(0, -0.3) ' Bounce! Whee!
+			entity.Velocity += New Vector(1.5 * mainForm.jx, -1.5 * mainForm.jy) ' Bounce! Whee!
 			touchingGound = False
 		End If
 	End Sub

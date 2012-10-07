@@ -1,0 +1,17 @@
+<world gx="0" gy="0.001" speed="1">
+<camera w="1024" h="600" x="-194.298" y="-84.97821" speed="0.1"/>
+<entity name="player2" x="-666" y="-25.00098" vx="0" vy="0" w="100" h="200" mass="1" locked="False" solid="True" rest="0.5" zorder="8" image="discord.png"/>
+<entity x="774.5" y="37.5" vx="0" vy="0" w="3000" h="75" mass="1000000" locked="True" solid="False" rest="0" zorder="-1" brush="kitchen-floor6.png" tx="0" ty="0"/>
+<entity name="ground" x="774.5" y="187.5" vx="0" vy="0" w="3000" h="225" mass="1000000" locked="True" solid="True" rest="0" zorder="9" brush="kitchen-floor6.png" tx="0" ty="0"/>
+<entity x="490" y="-60" vx="0" vy="0" w="2430" h="120" mass="1000000" locked="True" solid="False" rest="0" zorder="-1" brush="kitchen-back1.png" tx="0" ty="0"/>
+<entity x="494.5" y="-253" vx="0" vy="0" w="140" h="175" mass="1000000" locked="True" solid="False" rest="0" zorder="-1" image="cupboard.png"/>
+<entity x="488.5" y="-370" vx="0" vy="0" w="2427" h="500" mass="1000000" locked="True" solid="False" rest="0" zorder="-2" brush="ceiling.png" tx="-16" ty="-120"/>
+<entity name="ground" x="820" y="45" vx="0" vy="0" w="60" h="60" mass="1000000" locked="True" solid="True" rest="0.5" zorder="0" image="stiik2.png"/>
+<entity name="ground" x="1358.5" y="-39.5" vx="0" vy="0" w="60" h="60" mass="1000000" locked="True" solid="True" rest="0.5" zorder="3" image="stiik2.png"/>
+<entity name="ground" x="1419.5" y="45.5" vx="0" vy="0" w="60" h="60" mass="1000000" locked="True" solid="True" rest="0.5" zorder="1" image="stiik2.png"/>
+<entity name="ground" x="1390" y="3.5" vx="0" vy="0" w="60" h="60" mass="1000000" locked="True" solid="True" rest="0.5" zorder="2" image="stiik2.png"/>
+<entity name="ground" x="1299" y="46" vx="0" vy="0" w="60" h="60" mass="1000000" locked="True" solid="True" rest="0.5" zorder="1" image="stiik2.png"/>
+<entity name="ground" x="1359" y="45.5" vx="0" vy="0" w="60" h="60" mass="1000000" locked="True" solid="True" rest="0.5" zorder="1" image="stiik2.png"/>
+<entity name="ground" x="1330.5" y="3.5" vx="0" vy="0" w="60" h="60" mass="1000000" locked="True" solid="True" rest="0.5" zorder="2" image="stiik2.png"/>
+<entity name="pinkie" x="-364.5" y="-43" vx="0" vy="0" w="160" h="200" mass="1" locked="False" solid="True" rest="1" zorder="8" image="pinkie3.png"/>
+</world>

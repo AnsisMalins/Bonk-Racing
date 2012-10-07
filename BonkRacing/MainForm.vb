@@ -6,6 +6,9 @@ Imports System.Xml
 
 Public Class MainForm
 
+	Public Shared ReadOnly jx As Single = 0.1
+	Public Shared ReadOnly jy As Single = 0.3
+
 	Private direction As Integer = 1
 	Private Sub PlayerControl(ByVal keyData As Keys)
 		If player Is Nothing Then Return
@@ -17,9 +20,9 @@ Public Class MainForm
 				If direction <> 1 Then player.Bitmap.RotateFlip(RotateFlipType.RotateNoneFlipX)
 				direction = 1
 			Case Keys.Up
-				If player.IsColliding Then player.Velocity += New Vector(0.1 * direction, -0.4)
+				If player.IsColliding Then player.Velocity += New Vector(1 * direction * jx, -2 * jy)
 			Case Keys.Down
-				If player.IsColliding Then player.Velocity += New Vector(0.2 * direction, -0.2)
+				If player.IsColliding Then player.Velocity += New Vector(2 * direction * jx, -1 * jy)
 		End Select
 	End Sub
 
@@ -314,6 +317,8 @@ Public Class MainForm
 					startButton_Click(Nothing, Nothing)
 				Case Keys.P
 					PropertiesToolStripMenuItem_Click(Nothing, Nothing)
+				Case Keys.T
+					ToolStripMenuItem3_Click(Nothing, Nothing)
 			End Select
 		End If
 		Return MyBase.ProcessCmdKey(msg, keyData)
