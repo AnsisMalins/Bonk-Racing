@@ -7,20 +7,21 @@ Imports System.Xml
 Public Class Entity
 
 	Public Sub New(ByVal xml As XmlNode)
+		Body = New Body()
 		Dim attr1 As XmlAttribute, attr2 As XmlAttribute
 		attr1 = xml.Attributes("x")
 		attr2 = xml.Attributes("y")
-		If attr1 IsNot Nothing AndAlso attr2 IsNot Nothing Then Location = New Vector(Single.Parse(attr1.Value), Single.Parse(attr2.Value))
+		If attr1 IsNot Nothing AndAlso attr2 IsNot Nothing Then Body.Location = New Vector(Single.Parse(attr1.Value), Single.Parse(attr2.Value))
 		attr1 = xml.Attributes("vx")
 		attr2 = xml.Attributes("vy")
-		If attr1 IsNot Nothing AndAlso attr2 IsNot Nothing Then Velocity = New Vector(Single.Parse(attr1.Value), Single.Parse(attr2.Value))
+		If attr1 IsNot Nothing AndAlso attr2 IsNot Nothing Then Body.Velocity = New Vector(Single.Parse(attr1.Value), Single.Parse(attr2.Value))
 		attr1 = xml.Attributes("w")
 		attr2 = xml.Attributes("h")
-		If attr1 IsNot Nothing AndAlso attr2 IsNot Nothing Then Size = New Vector(Single.Parse(attr1.Value), Single.Parse(attr2.Value))
+		If attr1 IsNot Nothing AndAlso attr2 IsNot Nothing Then Body.Size = New Vector(Single.Parse(attr1.Value), Single.Parse(attr2.Value))
 		attr1 = xml.Attributes("mass")
-		Mass = If(attr1 IsNot Nothing, Single.Parse(attr1.Value), 1000000)
+		Body.Mass = If(attr1 IsNot Nothing, Single.Parse(attr1.Value), 1000000)
 		attr1 = xml.Attributes("rest")
-		If attr1 IsNot Nothing Then Restitution = Single.Parse(attr1.Value)
+		If attr1 IsNot Nothing Then Body.Restitution = Single.Parse(attr1.Value)
 		attr1 = xml.Attributes("zorder")
 		If attr1 IsNot Nothing Then ZOrder = Integer.Parse(attr1.Value)
 		attr1 = xml.Attributes("solid")
@@ -73,47 +74,45 @@ Public Class Entity
 	End Sub
 
 	Private Sub Initialize(ByVal rectangle As RectangleF)
-		Me.Rectangle = rectangle
+		Body = New Body()
+		Body.Rectangle = rectangle
 		IsLocked = True
 		IsSolid = True
-		Mass = 1000000
+		Body.Mass = 0
 	End Sub
 
 	Private Sub Initialize(ByVal rectangle As RectangleF, ByVal mass As Single, ByVal restitution As Single)
-		Me.Rectangle = rectangle
-		Me.Mass = mass
+		Body = New Body()
+		Body.Rectangle = rectangle
+		Body.Mass = mass
 		IsSolid = True
-		Me.Restitution = restitution
+		Body.Restitution = restitution
 	End Sub
-
-	Public Property Rectangle() As RectangleF
-		Get
-			Return New RectangleF(Location - Size / 2, Size)
-		End Get
-		Set(ByVal value As RectangleF)
-			Location = New Vector(value.Location) + New Vector(value.Size) / 2
-			Size = value.Size
-		End Set
-	End Property
 
 	Public Bitmap As Bitmap
 	Public Brush As TextureBrush
 	Public Color As Color
 	Public TextureOffset As Vector
 
-	Public Location As Vector
+	Public Body As Body
 
-	Public Velocity As Vector
+	Public Property IsLocked() As Boolean
+		Get
+			Return Body.Mass <= 0
+		End Get
+		Set(ByVal value As Boolean)
+			If value Then Body.Mass = 0
+		End Set
+	End Property
 
-	Public Size As Vector
-
-	Public Mass As Single
-
-	Public IsLocked As Boolean
-
-	Public IsSolid As Boolean
-
-	Public Restitution As Single
+	Public Property IsSolid() As Boolean
+		Get
+			Return (Body.CollisionMask And 1) > 0
+		End Get
+		Set(ByVal value As Boolean)
+			Body.CollisionMask = If(value, 1, 0)
+		End Set
+	End Property
 
 	Public IsColliding As Boolean
 
@@ -126,23 +125,21 @@ Public Class Entity
 	Public Function ToXml() As String
 		Return "<entity" _
 		& If(Not String.IsNullOrEmpty(Name), " name=""" & Name & """", "") _
-		& " x=""" & Location.X.ToString() & """" _
-		& " y=""" & Location.Y.ToString() & """" _
-		& " vx=""" & Velocity.X.ToString() & """" _
-		& " vy=""" & Velocity.Y.ToString() & """" _
-		& " w=""" & Size.X.ToString() & """" _
-		& " h=""" & Size.Y.ToString() & """" _
-		& " mass=""" & Mass.ToString() & """" _
+		& " x=""" & Body.Location.X.ToString() & """" _
+		& " y=""" & Body.Location.Y.ToString() & """" _
+		& " vx=""" & Body.Velocity.X.ToString() & """" _
+		& " vy=""" & Body.Velocity.Y.ToString() & """" _
+		& " w=""" & Body.Size.X.ToString() & """" _
+		& " h=""" & Body.Size.Y.ToString() & """" _
+		& " mass=""" & Body.Mass.ToString() & """" _
 		& " locked=""" & IsLocked.ToString() & """" _
 		& " solid=""" & IsSolid.ToString() & """" _
-		& " rest=""" & Restitution.ToString() & """" _
+		& " rest=""" & Body.Restitution.ToString() & """" _
 		& " zorder=""" & ZOrder.ToString() & """" _
 		& If(Bitmap IsNot Nothing, " image=""" & ImageFile & """", If(Brush IsNot Nothing, " brush=""" & ImageFile & """", " color=""" & Convert.ToString(Color.ToArgb(), 16) & """")) _
 		& If(Brush IsNot Nothing, " tx=""" & TextureOffset.X.ToString() & """ ty=""" & TextureOffset.Y.ToString() & """", "") _
 		& "/>"
 	End Function
-
-	Public SelfDestruct As Boolean
 
 	Public Overridable Sub PhysicsCallback(ByVal world As World)
 		If Actor IsNot Nothing Then Actor.PhysicsCallback(Me, world)
@@ -159,12 +156,10 @@ Public Class Entity
 	Public Actor As Actor
 
 	Public Shared Function Collides(ByVal i As Entity, ByVal j As Entity, ByVal world As World) As Boolean
-		Dim iRect As New RectangleF(i.Location + i.Velocity * world.Speed - i.Size / 2, i.Size)
-		Dim jRect As New RectangleF(j.Location + j.Velocity * world.Speed - j.Size / 2, j.Size)
+		Dim iRect As New RectangleF(i.Body.Location + i.Body.Velocity * world.Rate - i.Body.Size / 2, i.Body.Size)
+		Dim jRect As New RectangleF(j.Body.Location + j.Body.Velocity * world.Rate - j.Body.Size / 2, j.Body.Size)
 		Return RectangleF.Intersect(iRect, jRect) <> RectangleF.Empty
 	End Function
-
-	Public Rubbery As Boolean
 End Class
 
 Public Class Actor
@@ -192,9 +187,13 @@ Public Class PinkiePie
 
 	Public Overrides Sub RenderCallback(ByVal entity As Entity, ByVal mainForm As MainForm)
 		If touchingGound Then
-			entity.Velocity += New Vector(1.5 * mainForm.jx, -1.5 * mainForm.jy) ' Bounce! Whee!
+			entity.Body.Velocity += New Vector(1.5 * mainForm.jx, -1.5 * mainForm.jy) ' Bounce! Whee!
 			touchingGound = False
 		End If
 		If caughtPlayer Then mainForm.GameLose()
 	End Sub
+End Class
+
+Public Class Scene
+
 End Class

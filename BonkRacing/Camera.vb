@@ -16,7 +16,7 @@ Public Class Camera
 
 	Public Sub Follow(ByVal target As Entity)
 		If Target Is Nothing Then Return
-		Location += (target.Location + New Vector(0, -100) - Location) * Speed
+		Location += (target.Body.Location + New Vector(0, -100) - Location) * Speed
 	End Sub
 
 	Public X As Single

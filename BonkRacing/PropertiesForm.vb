@@ -10,12 +10,12 @@
 	Public Sub Reload()
 		If mainForm.selectTool.selection.Count > 0 Then
 			Dim value As Entity = mainForm.selectTool.selection(0)
-			x.Text = value.Location.X.ToString()
-			y.Text = value.Location.Y.ToString()
-			width.Text = value.Size.X.ToString()
-			height.Text = value.Size.Y.ToString()
-			mass.Text = value.Mass.ToString()
-			restitution.Text = value.Restitution.ToString()
+			x.Text = value.Body.Location.X.ToString()
+			y.Text = value.Body.Location.Y.ToString()
+			width.Text = value.Body.Size.X.ToString()
+			height.Text = value.Body.Size.Y.ToString()
+			mass.Text = value.Body.Mass.ToString()
+			restitution.Text = value.Body.Restitution.ToString()
 			locked.Checked = value.IsLocked
 			solid.Checked = value.IsSolid
 			zorder.Text = value.ZOrder.ToString()
@@ -37,10 +37,10 @@
 
 	Private Sub Button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Button1.Click
 		For Each i As Entity In mainForm.selectTool.selection
-			If x.Tag IsNot Nothing OrElse y.Tag IsNot Nothing Then i.Location = New Vector(Single.Parse(x.Text), Single.Parse(y.Text))
-			If width.Tag IsNot Nothing OrElse height.Tag IsNot Nothing Then i.Size = New Vector(Single.Parse(width.Text), Single.Parse(height.Text))
-			If mass.Tag IsNot Nothing Then i.Mass = Single.Parse(mass.Text)
-			If restitution.Tag IsNot Nothing Then i.Restitution = Single.Parse(restitution.Text)
+			If x.Tag IsNot Nothing OrElse y.Tag IsNot Nothing Then i.Body.Location = New Vector(Single.Parse(x.Text), Single.Parse(y.Text))
+			If width.Tag IsNot Nothing OrElse height.Tag IsNot Nothing Then i.Body.Size = New Vector(Single.Parse(width.Text), Single.Parse(height.Text))
+			If mass.Tag IsNot Nothing Then i.Body.Mass = Single.Parse(mass.Text)
+			If restitution.Tag IsNot Nothing Then i.Body.Restitution = Single.Parse(restitution.Text)
 			If locked.Tag IsNot Nothing Then i.IsLocked = locked.Checked
 			If solid.Tag IsNot Nothing Then i.IsSolid = solid.Checked
 			If zorder.Tag IsNot Nothing Then i.ZOrder = Integer.Parse(zorder.Text)

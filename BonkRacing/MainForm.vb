@@ -32,11 +32,11 @@ Public Class MainForm
 				direction = 1
 			Case Keys.Up
 				If player.IsColliding Then
-					player.Velocity += New Vector(1 * direction * jx, -1.6 * jy)
+					player.Body.Velocity += New Vector(1 * direction * jx, -1.6 * jy)
 				End If
 			Case Keys.Down
 				If player.IsColliding Then
-					player.Velocity += New Vector(2 * direction * jx, -0.5 * jy)
+					player.Body.Velocity += New Vector(2 * direction * jx, -0.5 * jy)
 				End If
 			Case Keys.Escape
 				world.Stop()
@@ -66,12 +66,13 @@ Public Class MainForm
 			attr2 = worldNode.Attributes("gy")
 			If attr1 IsNot Nothing AndAlso attr2 IsNot Nothing Then world.Gravity = New Vector(Single.Parse(attr1.Value), Single.Parse(attr2.Value))
 			attr1 = worldNode.Attributes("speed")
-			If attr1 IsNot Nothing Then world.Speed = Single.Parse(attr1.Value)
+			If attr1 IsNot Nothing Then world.Rate = Single.Parse(attr1.Value)
 		End If
-		SyncLock world.Entities
+		SyncLock world.Bodies
 			For Each i As XmlNode In xml.SelectNodes("//entity")
 				Dim entity As New Entity(i)
-				world.Entities.Add(entity)
+				scene.Add(entity)
+				world.Bodies.Add(entity.Body)
 				AssignActor(entity)
 			Next
 		End SyncLock
@@ -94,18 +95,16 @@ Public Class MainForm
 			writer.WriteLine("<world" _
 			& " gx=""" & world.Gravity.X & """" _
 			& " gy=""" & world.Gravity.Y & """" _
-			& " speed=""" & world.Speed & """>")
+			& " speed=""" & world.Rate & """>")
 			writer.WriteLine("<camera" _
 			& " w=""" & camera.Size.X & """" _
 			& " h=""" & camera.Size.Y & """" _
 			& " x=""" & camera.Location.X & """" _
 			& " y=""" & camera.Location.Y & """" _
 			& " speed=""" & camera.Speed & """/>")
-			SyncLock world.Entities
-				For Each i As Entity In world.Entities
-					writer.WriteLine(i.ToXml())
-				Next
-			End SyncLock
+			For Each i As Entity In scene
+				writer.WriteLine(i.ToXml())
+			Next
 			writer.Write("</world>")
 		End Using
 	End Sub
@@ -119,6 +118,7 @@ Public Class MainForm
 	Private resources As List(Of IDisposable)
 	Public camera As Camera
 	Public world As World
+	Public scene As List(Of Entity)
 	Private mouseDown1 As Point
 	Private prevSecond As Long
 	Private fpsTemp As Integer
@@ -134,6 +134,7 @@ Public Class MainForm
 		Else FormBorderStyle = Windows.Forms.FormBorderStyle.FixedSingle
 		ClientSize = resolution
 		camera = New Camera(resolution, Vector.Zero)
+		scene = New List(Of Entity)()
 		world = New World()
 		If Not Debugger.IsAttached Then
 			mainMenu.Dock = DockStyle.Fill
@@ -151,32 +152,28 @@ Public Class MainForm
 		If world.IsRunning Then camera.Follow(player)
 		e.Graphics.TranslateTransform(camera.X, camera.Y)
 
-		Dim entities As Entity()
-		SyncLock world.Entities
-			entities = world.Entities.ToArray()
-		End SyncLock
-		Array.Sort(entities, Function(a As Entity, b As Entity) a.ZOrder - b.ZOrder)
+		Sort.Insertion(scene, Function(a As Entity, b As Entity) a.ZOrder - b.ZOrder)
 
-		For Each i As Entity In entities
+		For Each i As Entity In scene
 			i.RenderCallback(Me)
 			If i.Bitmap IsNot Nothing Then
-				e.Graphics.DrawImage(i.Bitmap, i.Rectangle)
+				e.Graphics.DrawImage(i.Bitmap, i.Body.Rectangle)
 			ElseIf i.Brush IsNot Nothing Then
-				e.Graphics.FillRectangle(i.Brush, i.Rectangle)
+				e.Graphics.FillRectangle(i.Brush, i.Body.Rectangle)
 			Else
 				Using brush As New SolidBrush(i.Color)
-					e.Graphics.FillRectangle(brush, i.Rectangle)
+					e.Graphics.FillRectangle(brush, i.Body.Rectangle)
 				End Using
 			End If
 			i.IsColliding = False
-			If i Is player AndAlso i.Location.Y > 500 Then
+			If i Is player AndAlso i.Body.Location.Y > 500 Then
 				gameWon = True
 			End If
 		Next
 
 		If Debugger.IsAttached Then
-			For Each i As Entity In entities
-				e.Graphics.DrawLine(Pens.Cyan, i.Location, i.Location + i.Velocity * world.Speed * 100)
+			For Each i As Entity In scene
+				e.Graphics.DrawLine(Pens.Cyan, i.Body.Location, i.Body.Location + i.Body.Velocity * world.Rate * 100)
 			Next
 			e.Graphics.DrawLine(Pens.Black, camera.Location + New Vector(-20, 0), camera.Location + New Vector(20, 0))
 			e.Graphics.DrawLine(Pens.Black, camera.Location + New Vector(0, -20), camera.Location + New Vector(0, 20))
@@ -218,6 +215,7 @@ Public Class MainForm
 	End Sub
 
 	Private Sub UnloadLevel()
+		scene.Clear()
 		If world IsNot Nothing Then world.Dispose()
 	End Sub
 
@@ -236,8 +234,9 @@ Public Class MainForm
 	End Sub
 
 	Private Sub clearButton_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ClearToolStripMenuItem.Click
-		SyncLock world.Entities
-			world.Entities.Clear()
+		scene.Clear()
+		SyncLock world.Bodies
+			world.Bodies.Clear()
 		End SyncLock
 		camera.Location = Vector.Zero
 	End Sub
@@ -250,9 +249,9 @@ Public Class MainForm
 		Return
 		If player.IsColliding Then
 			If e.Button = MouseButtons.Left Then
-				player.Velocity += New Vector(-200, -200)
+				player.Body.Velocity += New Vector(-200, -200)
 			ElseIf e.Button = MouseButtons.Right Then
-				player.Velocity += New Vector(200, -200)
+				player.Body.Velocity += New Vector(200, -200)
 			End If
 		End If
 	End Sub
@@ -340,9 +339,9 @@ Public Class MainForm
 		Else
 			Select Case keyData
 				Case Keys.Delete
-					SyncLock world.Entities
+					SyncLock world.Bodies
 						For Each i As Entity In selectTool.selection
-							world.Entities.Remove(i)
+							world.Bodies.Remove(i.Body)
 						Next
 					End SyncLock
 					selectTool.selection.Clear()
@@ -369,7 +368,7 @@ Public Class MainForm
 		diag.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*"
 		If diag.ShowDialog() <> Windows.Forms.DialogResult.OK Then Return
 		Dim fileName As String = Path.GetFileName(diag.FileName)
-		If Path.GetDirectoryName(diag.FileName) <> My.Application.Info.DirectoryPath Then File.Copy(diag.FileName, Path.Combine(My.Application.Info.DirectoryPath, fileName))
+		If Path.GetDirectoryName(diag.FileName).ToLower() <> My.Application.Info.DirectoryPath.ToLower() Then File.Copy(diag.FileName, Path.Combine(My.Application.Info.DirectoryPath, fileName))
 		LoadLevel(fileName)
 	End Sub
 

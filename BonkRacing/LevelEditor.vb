@@ -57,8 +57,9 @@ Public Class CreateTool
 		Dim topLeft As New Vector(Math.Min(mouse1.X, mouse2.X), Math.Min(mouse1.Y, mouse2.Y))
 		Dim downRight As New Vector(Math.Max(mouse1.X, mouse2.X), Math.Max(mouse1.Y, mouse2.Y))
 		Dim entity As New Entity(New Rectangle(topLeft, downRight - topLeft), Color.FromArgb(rnd.Next(255), rnd.Next(255), rnd.Next(255)))
-		SyncLock Form.world.Entities
-			Form.world.Entities.Add(entity)
+		Form.scene.Add(entity)
+		SyncLock Form.world.Bodies
+			Form.world.Bodies.Add(entity.Body)
 		End SyncLock
 		mdown = False
 	End Sub
@@ -92,14 +93,10 @@ Public Class SelectTool
 		Dim mouse2 As Vector = Form.camera.VectorToWorld(e.Location)
 		Dim topLeft As New Vector(Math.Min(mouse1.X, mouse2.X), Math.Min(mouse1.Y, mouse2.Y))
 		Dim downRight As New Vector(Math.Max(mouse1.X, mouse2.X), Math.Max(mouse1.Y, mouse2.Y))
-		Dim entities As Entity()
-		SyncLock Form.world.Entities
-			entities = Form.world.Entities.ToArray()
-		End SyncLock
-		Array.Sort(entities, Function(a As Entity, b As Entity) b.ZOrder - a.ZOrder)
-		For Each i As Entity In entities
+		Sort.Insertion(Form.scene, Function(a As Entity, b As Entity) b.ZOrder - a.ZOrder)
+		For Each i As Entity In Form.scene
 			Dim selectRect As New RectangleF(topLeft, downRight - topLeft)
-			If RectangleF.Intersect(selectRect, i.Rectangle) <> RectangleF.Empty Then
+			If RectangleF.Intersect(selectRect, i.Body.Rectangle) <> RectangleF.Empty Then
 				If My.Computer.Keyboard.CtrlKeyDown Then selection.Remove(i) Else selection.Add(i)
 				If selectRect.Size = Size.Empty Then Exit For
 			End If
@@ -111,7 +108,7 @@ Public Class SelectTool
 	Public Overrides Sub Paint(ByVal sender As Object, ByVal e As PaintEventArgs)
 		Using pen As New Pen(Color.LightPink, 2)
 			For Each i As Entity In selection
-				e.Graphics.DrawRectangle(pen, Rectangle.Round(i.Rectangle))
+				e.Graphics.DrawRectangle(pen, Rectangle.Round(i.Body.Rectangle))
 			Next
 		End Using
 		If Not mdown Then Return
@@ -139,8 +136,8 @@ Public Class MoveTool
 		If Not mdown Then Return
 		Dim mouse2 As Vector = Form.camera.VectorToWorld(e.Location)
 		For Each i As Entity In Form.selectTool.selection
-			i.Location += mouse2 - mouse1
-			i.Velocity = Vector.Zero
+			i.Body.Location += mouse2 - mouse1
+			i.Body.Velocity = Vector.Zero
 		Next
 		mouse1 = mouse2
 	End Sub
@@ -152,7 +149,7 @@ Public Class MoveTool
 	Public Overrides Sub Paint(ByVal sender As Object, ByVal e As System.Windows.Forms.PaintEventArgs)
 		If Not mdown OrElse Form.selectTool.selection.Count = 0 Then Return
 		Dim entity As Entity = Form.selectTool.selection(0)
-		e.Graphics.DrawString(entity.Location.ToString(), Form.Font, Brushes.Black, mouse1 + New Vector(16, 16))
+		e.Graphics.DrawString(entity.Body.Location.ToString(), Form.Font, Brushes.Black, mouse1 + New Vector(16, 16))
 	End Sub
 End Class
 
@@ -174,22 +171,22 @@ Public Class ResizeTool
 		If Form.selectTool.selection.Count = 0 Then Return
 		Dim entity As Entity = Form.selectTool.selection(0)
 		Dim side As Integer = 0
-		If mouse2.X > entity.Rectangle.Left AndAlso mouse2.X < entity.Rectangle.Right Then
-			If mouse2.Y < entity.Location.Y Then
+		If mouse2.X > entity.Body.Rectangle.Left AndAlso mouse2.X < entity.Body.Rectangle.Right Then
+			If mouse2.Y < entity.Body.Location.Y Then
 				side = 1
-			ElseIf mouse2.Y > entity.Location.Y Then
+			ElseIf mouse2.Y > entity.Body.Location.Y Then
 				side = 2
 			End If
-		ElseIf mouse2.Y > entity.Rectangle.Top AndAlso mouse2.Y < entity.Rectangle.Bottom Then
-			If mouse2.X < entity.Location.X Then
+		ElseIf mouse2.Y > entity.Body.Rectangle.Top AndAlso mouse2.Y < entity.Body.Rectangle.Bottom Then
+			If mouse2.X < entity.Body.Location.X Then
 				side = 3
-			ElseIf mouse2.X > entity.Location.X Then
+			ElseIf mouse2.X > entity.Body.Location.X Then
 				side = 4
 			End If
 		End If
 		Dim dmouse As Vector = mouse2 - mouse1
 		For Each i As Entity In Form.selectTool.selection
-			Dim rect As RectangleF = i.Rectangle
+			Dim rect As RectangleF = i.Body.Rectangle
 			Select Case side
 				Case 1
 					rect.Inflate(0, -dmouse.Y / 2)
@@ -204,7 +201,7 @@ Public Class ResizeTool
 					rect.Inflate(dmouse.X / 2, 0)
 					rect.Offset(dmouse.X / 2, 0)
 			End Select
-			i.Rectangle = rect
+			i.Body.Rectangle = rect
 		Next
 		mouse1 = mouse2
 	End Sub
@@ -216,9 +213,9 @@ Public Class ResizeTool
 	Public Overrides Sub Paint(ByVal sender As Object, ByVal e As System.Windows.Forms.PaintEventArgs)
 		If Form.selectTool.selection.Count = 0 Then Return
 		Dim entity As Entity = Form.selectTool.selection(0)
-		e.Graphics.DrawRectangle(Pens.Red, Rectangle.Round(entity.Rectangle))
+		e.Graphics.DrawRectangle(Pens.Red, Rectangle.Round(entity.Body.Rectangle))
 		If Not mdown Then Return
-		e.Graphics.DrawString(entity.Size.ToString(), Form.Font, Brushes.Black, mouse1 + New Vector(16, 16))
+		e.Graphics.DrawString(entity.Body.Size.ToString(), Form.Font, Brushes.Black, mouse1 + New Vector(16, 16))
 	End Sub
 End Class
 
